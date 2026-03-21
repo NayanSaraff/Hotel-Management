@@ -1,0 +1,74 @@
+# ── Maven Build Output ──────────────────────────────
+target/
+*.jar
+*.war
+*.ear
+
+# ── Database Credentials (NEVER push these) ─────────
+src/main/resources/db.properties
+
+# ── IDE Files ────────────────────────────────────────
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# NetBeans
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+
+# ── OS Files ─────────────────────────────────────────
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Logs ─────────────────────────────────────────────
+logs/
+*.log
+log/
+
+# ── JavaFX jlink / jpackage Output ───────────────────
+hotel-app/
+hotel-app.zip
+installer/
+*.exe
+*.msi
+*.dmg
+*.pkg
+
+# ── Compiled Class Files ─────────────────────────────
+*.class
+
+# ── Package files ────────────────────────────────────
+*.zip
+*.tar.gz
+*.rar
+
+# ── Runtime ──────────────────────────────────────────
+*.pid
+*.seed
+*.pid.lock
+
+# ── Test Output ──────────────────────────────────────
+test-output/
+surefire-reports/

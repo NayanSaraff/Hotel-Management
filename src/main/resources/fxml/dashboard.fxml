@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.openjfx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1280" prefHeight="800"
+            style="-fx-background-color:#f4f7fb;">
+    <left>
+        <VBox style="-fx-background-color:linear-gradient(to bottom, #0f2540, #1a3c5c);"
+              prefWidth="215" spacing="3">
+            <padding><Insets top="24" right="10" bottom="24" left="10"/></padding>
+            <Label text="🏨 Grand Hotel"
+                   style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#d4a843;-fx-padding:0 0 4 4;"/>
+            <Separator style="-fx-opacity:0.3;"/>
+            <VBox style="-fx-background-color:rgba(255,255,255,0.07);-fx-background-radius:8;-fx-padding:10 12;" spacing="2">
+                <Label fx:id="userNameLabel" text="User Name" style="-fx-text-fill:white;-fx-font-weight:bold;-fx-font-size:13px;"/>
+                <Label fx:id="userRoleLabel" text="Role"      style="-fx-text-fill:#d4a843;-fx-font-size:11px;-fx-font-weight:bold;"/>
+            </VBox>
+            <Separator style="-fx-opacity:0.3;"/>
+
+            <Button text="📊  Dashboard"  style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToDashboard"/>
+            <Button text="🛏  Rooms"       style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToRooms"/>
+            <Button text="📋  Bookings"    style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToBookings"/>
+            <Button text="👥  Customers"   style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToCustomers"/>
+            <Button text="💳  Payments"    style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToPayments"/>
+            <Button text="📦  Inventory"   style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToInventory"/>
+            <Button fx:id="navExpenses" text="💰  Expenses"    style="-fx-background-color:transparent;-fx-text-fill:#f39c12;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToExpenses"/>
+            <Button fx:id="navStaff"    text="👔  Staff"       style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToStaff"/>
+
+            <!-- Reports with alert badge -->
+            <StackPane maxWidth="Infinity">
+                <Button text="📈  Reports"  style="-fx-background-color:transparent;-fx-text-fill:white;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#goToReports"/>
+                <Label fx:id="alertBadge" text="0"
+                       style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-size:10px;-fx-font-weight:bold;-fx-background-radius:10;-fx-padding:2 6;"
+                       StackPane.alignment="CENTER_RIGHT" visible="false"/>
+            </StackPane>
+
+            <Region VBox.vgrow="ALWAYS"/>
+            <Separator style="-fx-opacity:0.3;"/>
+            <Button text="🚪  Logout" style="-fx-background-color:transparent;-fx-text-fill:#e74c3c;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#handleLogout"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="0" style="-fx-background-color:#f4f7fb;">
+            <HBox style="-fx-background-color:white;-fx-border-color:transparent transparent #dde3eb transparent;-fx-border-width:0 0 1 0;" alignment="CENTER_LEFT" spacing="12">
+                <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+                <Label text="Hotel Management System" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="todayDateLabel" text="" style="-fx-font-size:12px;-fx-text-fill:#566573;"/>
+            </HBox>
+            <HBox style="-fx-background-color:#f4f7fb;" spacing="8">
+                <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                <VBox style="-fx-background-color:#2980b9;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="TOTAL ROOMS"   style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="totalRoomsLabel" text="—" style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+                <VBox style="-fx-background-color:#27ae60;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="AVAILABLE"     style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="availableRoomsLabel" text="—" style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+                <VBox style="-fx-background-color:#e74c3c;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="OCCUPIED"      style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="occupiedRoomsLabel" text="—" style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+                <VBox style="-fx-background-color:#e67e22;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="CHECKED IN"    style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="checkedInLabel" text="—" style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+                <VBox style="-fx-background-color:#8e44ad;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="MONTHLY REV"   style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="monthlyRevenueLabel" text="—" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+                <VBox style="-fx-background-color:#16a085;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="TODAY REV"     style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="todayRevenueLabel" text="—" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+                <VBox style="-fx-background-color:#3b5bdb;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="TODAY CHECK-IN" style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="todayCheckInsLabel" text="—" style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+                <VBox style="-fx-background-color:#c2255c;-fx-background-radius:10;-fx-padding:10 12;" HBox.hgrow="ALWAYS" spacing="4">
+                    <Label text="TODAY CHECK-OUT" style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                    <Label fx:id="todayCheckOutsLabel" text="—" style="-fx-font-size:22px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+                </VBox>
+            </HBox>
+            <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS" style="-fx-background-color:#f4f7fb;">
+                <padding><Insets top="8" right="16" bottom="16" left="16"/></padding>
+                <Label text="👈  Select a module from the sidebar." style="-fx-font-size:15px;-fx-text-fill:#95a5a6;"/>
+            </StackPane>
+        </VBox>
+    </center>
+</BorderPane>

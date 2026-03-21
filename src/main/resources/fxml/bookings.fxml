@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.openjfx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      spacing="12" style="-fx-background-color:#f4f7fb;-fx-padding:4 0 0 0;">
+
+    <!-- Title -->
+    <Label text="📋  Booking Management"
+           style="-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+
+    <!-- Row 1: Search + Filter + New Booking -->
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <TextField fx:id="searchField" promptText="Search by ref, guest, room…" prefWidth="280"
+                   style="-fx-background-color:white;-fx-border-color:#dde3eb;-fx-border-radius:20;-fx-background-radius:20;-fx-padding:7 14;"/>
+        <ComboBox fx:id="filterStatusCombo" prefWidth="160"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="➕  New Booking"
+                style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
+                onAction="#handleNewBooking" minWidth="145"/>
+    </HBox>
+
+    <!-- Row 2: Action Buttons (full text, no clipping) -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button fx:id="btnCheckIn" text="✅  Check-In"
+                style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
+                onAction="#handleCheckIn" disable="true" minWidth="130"/>
+        <Button fx:id="btnCheckOut" text="🚪  Check-Out"
+                style="-fx-background-color:#e67e22;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
+                onAction="#handleCheckOut" disable="true" minWidth="135"/>
+        <Button fx:id="btnCancel" text="❌  Cancel Booking"
+                style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
+                onAction="#handleCancelBooking" disable="true" minWidth="160"/>
+        <Button fx:id="btnInvoice" text="🧾  Generate Invoice"
+                style="-fx-background-color:#8e44ad;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
+                onAction="#handleGenerateInvoice" disable="true" minWidth="175"/>
+    </HBox>
+
+    <!-- Table -->
+    <TableView fx:id="bookingTable" VBox.vgrow="ALWAYS"
+               style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+        <columns>
+            <TableColumn fx:id="colRef"      text="Booking Ref"  prefWidth="140" minWidth="140" resizable="false"/>
+            <TableColumn fx:id="colGuest"    text="Guest Name"   prefWidth="160" minWidth="160" resizable="false"/>
+            <TableColumn fx:id="colRoom"     text="Room"         prefWidth="75"  minWidth="75"  resizable="false"/>
+            <TableColumn fx:id="colCheckIn"  text="Check-In"     prefWidth="105" minWidth="105" resizable="false"/>
+            <TableColumn fx:id="colCheckOut" text="Check-Out"    prefWidth="105" minWidth="105" resizable="false"/>
+            <TableColumn fx:id="colNights"   text="Nights"       prefWidth="65"  minWidth="65"  resizable="false"/>
+            <TableColumn fx:id="colStatus"   text="Status"       prefWidth="115" minWidth="115" resizable="false"/>
+            <TableColumn fx:id="colTotal"    text="Total (₹)"    prefWidth="105" minWidth="105" resizable="false"/>
+            <TableColumn fx:id="colBalance"  text="Balance (₹)"  prefWidth="105" minWidth="105" resizable="false"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+
+    <!-- New Booking Form -->
+    <VBox fx:id="bookingForm"
+          style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;-fx-padding:16;"
+          spacing="12" visible="false" managed="false">
+        <Label text="➕  New Booking"
+               style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+        <Separator/>
+        <GridPane hgap="12" vgap="10">
+
+            <!-- Customer search + combo -->
+            <Label text="Customer:"      GridPane.rowIndex="0" GridPane.columnIndex="0"
+            style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <ComboBox fx:id="customerCombo" GridPane.rowIndex="0" GridPane.columnIndex="1"
+          GridPane.columnSpan="3" prefWidth="400"
+          promptText="Type name or phone to search…"
+          editable="true"/>
+
+            <!-- Check-In -->
+            <Label text="Check-In:"     GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <DatePicker fx:id="checkInPicker" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                        prefWidth="180"/>
+
+            <!-- Check-Out -->
+            <Label text="Check-Out:"    GridPane.rowIndex="1" GridPane.columnIndex="2"
+                   style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <DatePicker fx:id="checkOutPicker" GridPane.rowIndex="1" GridPane.columnIndex="3"
+                        prefWidth="180"/>
+
+            <!-- Guests -->
+            <Label text="Guests:"       GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <Spinner fx:id="guestSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                     prefWidth="100"/>
+
+            <!-- Room -->
+            <Label text="Room:"         GridPane.rowIndex="3" GridPane.columnIndex="0"
+                   style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <HBox spacing="8" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                  GridPane.columnSpan="3">
+                <ComboBox fx:id="roomCombo" prefWidth="240"
+                          promptText="Click Find Available first…"/>
+                <Button text="🔍 Find Available Rooms"
+                        style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:7 14;-fx-background-radius:8;-fx-border-color:#bdc3c7;-fx-cursor:hand;"
+                        onAction="#handleSearchAvailableRooms"/>
+            </HBox>
+
+            <!-- Advance Paid -->
+            <Label text="Advance Paid:" GridPane.rowIndex="4" GridPane.columnIndex="0"
+                   style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextField fx:id="advanceField" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                       promptText="0.00"
+                       style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"
+                       prefWidth="120"/>
+
+            <!-- Payment Mode -->
+            <Label text="Payment Mode:" GridPane.rowIndex="4" GridPane.columnIndex="2"
+                   style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <ComboBox fx:id="paymentModeCombo" GridPane.rowIndex="4" GridPane.columnIndex="3"
+                      prefWidth="180"/>
+
+            <!-- Special Requests -->
+            <Label text="Special Requests:" GridPane.rowIndex="5" GridPane.columnIndex="0"
+                   style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextArea fx:id="specialRequestsArea" GridPane.rowIndex="5" GridPane.columnIndex="1"
+                      GridPane.columnSpan="3" prefRowCount="2"
+                      style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
+        </GridPane>
+
+        <!-- Charges Summary -->
+        <HBox spacing="24"
+              style="-fx-background-color:#eaf2ff;-fx-background-radius:8;-fx-border-color:#aed6f1;-fx-border-radius:8;-fx-padding:10 16;">
+            <VBox spacing="2">
+                <Label text="Room Charges"
+                       style="-fx-font-size:11px;-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+                <Label fx:id="roomChargesLabel" text="—"
+                       style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#2c3e50;"/>
+            </VBox>
+            <VBox spacing="2">
+                <Label text="GST"
+                       style="-fx-font-size:11px;-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+                <Label fx:id="gstLabel" text="—"
+                       style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#2c3e50;"/>
+            </VBox>
+            <VBox spacing="2">
+                <Label text="Total"
+                       style="-fx-font-size:11px;-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+                <Label fx:id="totalLabel" text="—"
+                       style="-fx-font-size:17px;-fx-font-weight:bold;-fx-text-fill:#1a6fa5;"/>
+            </VBox>
+            <VBox spacing="2">
+                <Label text="Balance Due"
+                       style="-fx-font-size:11px;-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+                <Label fx:id="balanceLabel" text="—"
+                       style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#e74c3c;"/>
+            </VBox>
+        </HBox>
+
+        <!-- Form Buttons -->
+        <HBox spacing="8" alignment="CENTER_RIGHT">
+            <Button text="💾  Confirm Booking"
+                    style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
+                    onAction="#handleSaveBooking"/>
+            <Button text="✖  Cancel"
+                    style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-border-color:#bdc3c7;-fx-cursor:hand;-fx-font-size:13px;"
+                    onAction="#handleCancelForm"/>
+        </HBox>
+    </VBox>
+</VBox>

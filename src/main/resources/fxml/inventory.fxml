@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.openjfx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      spacing="12" style="-fx-background-color:#f4f7fb;-fx-padding:4 0 0 0;">
+
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="📦  Inventory Management"
+               style="-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search items…" prefWidth="200"
+                   style="-fx-background-color:white;-fx-border-color:#dde3eb;-fx-border-radius:20;-fx-background-radius:20;-fx-padding:7 14;"/>
+        <Button text="⚠ Low Stock"
+                style="-fx-background-color:#e67e22;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-cursor:hand;"
+                onAction="#handleShowLowStock"/>
+        <Button text="➕ Add Item"
+                style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-cursor:hand;"
+                onAction="#handleAdd"/>
+        <Button text="✏️ Edit"
+                style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-border-color:#bdc3c7;-fx-cursor:hand;"
+                onAction="#handleEdit"/>
+        <Button text="📥 Restock"
+                style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-cursor:hand;"
+                onAction="#handleRestock"/>
+        <Button text="🗑 Delete"
+                style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-cursor:hand;"
+                onAction="#handleDelete"/>
+    </HBox>
+
+    <TableView fx:id="inventoryTable" VBox.vgrow="ALWAYS"
+               style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+        <columns>
+            <TableColumn fx:id="colName"      text="Item Name"    prefWidth="180" minWidth="160"/>
+            <TableColumn fx:id="colCategory"  text="Category"     prefWidth="120" minWidth="110"/>
+            <TableColumn fx:id="colQty"       text="Qty"          prefWidth="70"  minWidth="60"/>
+            <TableColumn fx:id="colThreshold" text="Min Qty"      prefWidth="75"  minWidth="65"/>
+            <TableColumn fx:id="colUnit"      text="Unit"         prefWidth="80"  minWidth="70"/>
+            <TableColumn fx:id="colPrice"     text="Unit Price"   prefWidth="100" minWidth="90"/>
+            <TableColumn fx:id="colSupplier"  text="Supplier"     prefWidth="160" minWidth="140"/>
+            <TableColumn fx:id="colStatus"    text="Stock Status" prefWidth="110" minWidth="100"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+    </TableView>
+
+    <VBox fx:id="formPane"
+          style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;-fx-padding:16;"
+          spacing="12" visible="false" managed="false">
+        <Label fx:id="formTitleLabel" text="Add Item"
+               style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+        <Separator/>
+        <GridPane hgap="12" vgap="8">
+            <Label text="Item Name:"    GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextField fx:id="itemNameField"  GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200" style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
+            <Label text="Category:"     GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <ComboBox fx:id="categoryCombo"   GridPane.rowIndex="0" GridPane.columnIndex="3" prefWidth="180"/>
+            <Label text="Quantity:"     GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextField fx:id="qtyField"       GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
+            <Label text="Min Threshold:" GridPane.rowIndex="1" GridPane.columnIndex="2" style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextField fx:id="thresholdField" GridPane.rowIndex="1" GridPane.columnIndex="3" style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
+            <Label text="Unit:"         GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextField fx:id="unitField"      GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
+            <Label text="Unit Price:"   GridPane.rowIndex="2" GridPane.columnIndex="2" style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextField fx:id="priceField"     GridPane.rowIndex="2" GridPane.columnIndex="3" style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
+            <Label text="Supplier:"     GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight:bold;-fx-text-fill:#566573;"/>
+            <TextField fx:id="supplierField"  GridPane.rowIndex="3" GridPane.columnIndex="1"
+                       GridPane.columnSpan="3" style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
+        </GridPane>
+        <HBox spacing="8" alignment="CENTER_RIGHT">
+            <Button text="💾 Save"
+                    style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:8;-fx-cursor:hand;"
+                    onAction="#handleSave"/>
+            <Button text="✖ Cancel"
+                    style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:8;-fx-cursor:hand;"
+                    onAction="#handleCancel"/>
+        </HBox>
+    </VBox>
+</VBox>

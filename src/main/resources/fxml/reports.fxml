@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.openjfx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      spacing="12" style="-fx-background-color:#f4f7fb;-fx-padding:4 0 0 0;">
+
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="📈  Reports &amp; Analytics"
+               style="-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔄 Refresh"
+                style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:8;-fx-border-color:#bdc3c7;-fx-cursor:hand;"
+                onAction="#handleRefresh"/>
+    </HBox>
+
+    <!-- Summary Cards -->
+    <HBox spacing="10">
+        <VBox style="-fx-background-color:#2980b9;-fx-background-radius:10;-fx-padding:12;" HBox.hgrow="ALWAYS" spacing="4">
+            <Label text="MONTHLY REVENUE" style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+            <Label fx:id="totalRevenueLabel" text="—" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+        </VBox>
+        <VBox style="-fx-background-color:#27ae60;-fx-background-radius:10;-fx-padding:12;" HBox.hgrow="ALWAYS" spacing="4">
+            <Label text="OCCUPANCY RATE" style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+            <Label fx:id="occupancyLabel" text="—" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+        </VBox>
+        <VBox style="-fx-background-color:#e67e22;-fx-background-radius:10;-fx-padding:12;" HBox.hgrow="ALWAYS" spacing="4">
+            <Label text="TODAY CHECK-INS" style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+            <Label fx:id="todayCheckInsLabel" text="—" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+        </VBox>
+        <VBox style="-fx-background-color:#8e44ad;-fx-background-radius:10;-fx-padding:12;" HBox.hgrow="ALWAYS" spacing="4">
+            <Label text="TODAY CHECK-OUTS" style="-fx-font-size:9px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+            <Label fx:id="todayCheckOutsLabel" text="—" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:white;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Alerts Section -->
+    <VBox style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;-fx-padding:12;" spacing="6">
+        <Label text="🔔  Active Alerts" style="-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+        <Separator/>
+        <VBox fx:id="alertsBox" spacing="6"/>
+    </VBox>
+
+    <!-- Charts Row 1 -->
+    <HBox spacing="10" VBox.vgrow="ALWAYS">
+        <BarChart fx:id="revenueBarChart" HBox.hgrow="ALWAYS" prefHeight="220"
+                  style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+            <xAxis><CategoryAxis label="Month"/></xAxis>
+            <yAxis><NumberAxis label="Revenue (₹)"/></yAxis>
+        </BarChart>
+        <PieChart fx:id="categoryPieChart" HBox.hgrow="ALWAYS" prefHeight="220"
+                  style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;"/>
+    </HBox>
+
+    <!-- Charts Row 2 -->
+    <HBox spacing="10" VBox.vgrow="ALWAYS">
+        <LineChart fx:id="bookingTrendChart" HBox.hgrow="ALWAYS" prefHeight="200"
+                   style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+            <xAxis><CategoryAxis label="Status"/></xAxis>
+            <yAxis><NumberAxis label="Count"/></yAxis>
+        </LineChart>
+        <BarChart fx:id="topRoomsChart" HBox.hgrow="ALWAYS" prefHeight="200"
+                  style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+            <xAxis><CategoryAxis label="Room"/></xAxis>
+            <yAxis><NumberAxis label="Bookings"/></yAxis>
+        </BarChart>
+    </HBox>
+</VBox>
