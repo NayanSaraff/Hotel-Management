@@ -1,17 +1,18 @@
 package com.hotel.service;
 
+import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * DUMMY Payment Gateway Service.
@@ -23,12 +24,12 @@ public class PaymentGatewayService {
     private static final Logger logger = LoggerFactory.getLogger(PaymentGatewayService.class);
 
     // ── Dummy UPI Details ─────────────────────────────────────────────────
-    private static final String DUMMY_UPI_VPA  = "grandhotel@dummyupi";
-    private static final String DUMMY_UPI_NAME = "Grand Hotel (Demo)";
+    private static final String DUMMY_UPI_VPA  = "marcelliliving@dummyupi";
+    private static final String DUMMY_UPI_NAME = "The Marcelli (Demo)";
 
     // ── Dummy Razorpay Details ────────────────────────────────────────────
     private static final String DUMMY_RZP_KEY  = "rzp_test_DEMO1234567890";
-    private static final String DUMMY_RZP_NAME = "Grand Hotel Demo";
+    private static final String DUMMY_RZP_NAME = "The Marcelli Demo";
 
     // ── UPI QR Code (Dummy) ───────────────────────────────────────────────
 

@@ -1,12 +1,20 @@
 package com.hotel.controllers;
 
+import java.io.File;
+
 import com.hotel.MainApp;
 import com.hotel.service.AuthService;
-import com.hotel.util.AlertUtil;
+
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
@@ -21,6 +29,7 @@ public class LoginController {
     @FXML private Label         errorLabel;
     @FXML private VBox          loginCard;
     @FXML private ProgressIndicator spinner;
+    @FXML private ImageView     logoImageView;
 
     private final AuthService authService = new AuthService();
 
@@ -28,6 +37,7 @@ public class LoginController {
     public void initialize() {
         errorLabel.setVisible(false);
         spinner.setVisible(false);
+        loadLogo();
 
         // Fade in the card
         FadeTransition ft = new FadeTransition(Duration.millis(600), loginCard);
@@ -35,6 +45,26 @@ public class LoginController {
 
         // Allow Enter key to submit
         passwordField.setOnAction(this::handleLogin);
+    }
+
+    private void loadLogo() {
+        String[] candidates = {
+                "logo (1).png",
+                System.getProperty("user.dir") + File.separator + "logo (1).png"
+        };
+
+        for (String path : candidates) {
+            File file = new File(path);
+            if (file.exists()) {
+                logoImageView.setImage(new Image(file.toURI().toString()));
+                return;
+            }
+        }
+
+        // Fallback in case logo is packaged in resources.
+        if (getClass().getResource("/logo (1).png") != null) {
+            logoImageView.setImage(new Image(getClass().getResource("/logo (1).png").toExternalForm()));
+        }
     }
 
     @FXML

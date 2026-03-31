@@ -11,7 +11,7 @@
         <VBox style="-fx-background-color:linear-gradient(to bottom, #0f2540, #1a3c5c);"
               prefWidth="215" spacing="3">
             <padding><Insets top="24" right="10" bottom="24" left="10"/></padding>
-            <Label text="🏨 Grand Hotel"
+            <Label text="🏨 The Marcelli"
                    style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#d4a843;-fx-padding:0 0 4 4;"/>
             <Separator style="-fx-opacity:0.3;"/>
             <VBox style="-fx-background-color:rgba(255,255,255,0.07);-fx-background-radius:8;-fx-padding:10 12;" spacing="2">

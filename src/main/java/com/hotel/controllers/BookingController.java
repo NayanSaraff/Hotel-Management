@@ -413,7 +413,7 @@ public class BookingController {
         if (AlertUtil.showConfirm("Check-In", "Confirm check-in for " + sel.getBookingReference() + "?")) {
             try {
                 bookingService.checkIn(sel.getBookingId());
-                AlertUtil.showInfo("Checked In ✅", "Guest checked in successfully.\nWelcome to Grand Hotel!");
+                AlertUtil.showInfo("Checked In ✅", "Guest checked in successfully.\nWelcome to The Marcelli!");
                 applyFilter();
             } catch (Exception e) {
                 AlertUtil.showError("Error", e.getMessage());
@@ -537,8 +537,9 @@ public class BookingController {
                 customerDAO.findById(booking.getCustomerId()).ifPresent(customer -> {
                     new Thread(() -> {
                         // Generate invoice PDF with coupon voucher included
-                        String tempPath = System.getProperty("java.io.tmpdir") +
-                                "Invoice_" + booking.getBookingReference() + ".pdf";
+                        String invoiceDir = "C:/Users/sarad/OneDrive/Desktop/HotelManagementSystem/invoices/";
+                        new java.io.File(invoiceDir).mkdirs(); // creates the folder if it doesn't exist
+                        String tempPath = invoiceDir + "Invoice_" + booking.getBookingReference() + ".pdf";
                         invoiceService.generateInvoiceWithCoupon(
                                 booking.getBookingId(), tempPath, finalCoupon);
                         // Email invoice + coupon to guest
@@ -593,27 +594,79 @@ public class BookingController {
         Booking sel = getSelected();
         if (sel == null)
             return;
-        FileChooser fc = new FileChooser();
-        fc.setTitle("Save Invoice");
-        fc.setInitialFileName("Invoice_" + sel.getBookingReference() + ".pdf");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        File file = fc.showSaveDialog(Stage.getWindows().stream()
-                .filter(w -> w instanceof Stage).findFirst().orElse(null));
-        if (file != null) {
-            boolean ok = invoiceService.generateInvoice(sel.getBookingId(), file.getAbsolutePath());
-            if (ok) {
-                if (AlertUtil.showConfirm("Email Invoice",
-                        "Invoice saved!\nSend it to guest via email?")) {
-                    customerDAO.findById(sel.getCustomerId())
-                            .ifPresent(customer -> new Thread(() -> emailService.sendInvoiceEmail(
-                                    customer, sel, file.getAbsolutePath())).start());
+        String invoiceDir = "C:/Users/sarad/OneDrive/Desktop/HotelManagementSystem/invoices/";
+        new java.io.File(invoiceDir).mkdirs();
+        String invoicePath = invoiceDir + "Invoice_" + sel.getBookingReference() + ".pdf";
+
+        boolean ok = invoiceService.generateInvoice(sel.getBookingId(), invoicePath);
+        if (ok) {
+            openInvoiceInApp(invoicePath, sel);
+        } else {
+            AlertUtil.showError("Error", "Failed to generate invoice.");
+        }
+    }
+
+    private void openInvoiceInApp(String invoicePath, Booking sel) {
+        File invoiceFile = new File(invoicePath);
+        if (!invoiceFile.exists()) {
+            AlertUtil.showError("Error", "Invoice file not found.");
+            return;
+        }
+
+        boolean openedExternally = false;
+        String openError = null;
+        try {
+            if (java.awt.Desktop.isDesktopSupported()) {
+                java.awt.Desktop desktop = java.awt.Desktop.getDesktop();
+                if (desktop.isSupported(java.awt.Desktop.Action.OPEN)) {
+                    desktop.open(invoiceFile);
+                    openedExternally = true;
                 }
-                AlertUtil.showInfo("Invoice", "Invoice saved to:\n" + file.getAbsolutePath());
+            }
+        } catch (Exception ex) {
+            openError = ex.getMessage();
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Invoice Generated");
+        if (openedExternally) {
+            alert.setHeaderText("Invoice opened in your default PDF viewer.");
+        } else {
+            alert.setHeaderText("Invoice generated successfully.");
+        }
+
+        String content = "Choose next action:\n"
+                + "- Save & Email: keep invoice and email guest\n"
+                + "- Discard: delete this invoice file";
+        if (openError != null && !openError.isBlank()) {
+            content += "\n\nNote: Could not auto-open PDF: " + openError;
+        } else if (!openedExternally) {
+            content += "\n\nNote: Auto-open is not available on this system.";
+        }
+        alert.setContentText(content);
+
+        ButtonType saveEmailBtn = new ButtonType("Save & Email", ButtonBar.ButtonData.OK_DONE);
+        ButtonType discardBtn = new ButtonType("Discard", ButtonBar.ButtonData.NO);
+        ButtonType closeBtn = new ButtonType("Close", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(saveEmailBtn, discardBtn, closeBtn);
+
+        Optional<ButtonType> choice = alert.showAndWait();
+        if (choice.isPresent() && choice.get() == saveEmailBtn) {
+            customerDAO.findById(sel.getCustomerId())
+                    .ifPresent(customer -> new Thread(() -> emailService.sendInvoiceEmail(
+                            customer, sel, invoicePath)).start());
+            AlertUtil.showInfo("Invoice Saved", "Invoice saved and emailed to guest.");
+        } else if (choice.isPresent() && choice.get() == discardBtn) {
+            boolean deleted = invoiceFile.delete();
+            if (deleted) {
+                AlertUtil.showInfo("Discarded", "Invoice has been discarded.");
             } else {
-                AlertUtil.showError("Error", "Failed to generate invoice.");
+                AlertUtil.showError("Discard Failed", "Could not delete the invoice file.");
             }
         }
     }
+
+    
 
     private void calculateCharges() {
         Room room = roomCombo.getValue();

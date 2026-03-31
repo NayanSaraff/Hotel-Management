@@ -19,8 +19,8 @@
         <Button text="➕ Add Item"
                 style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-cursor:hand;"
                 onAction="#handleAdd"/>
-        <Button text="✏️ Edit"
-                style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-border-color:#bdc3c7;-fx-cursor:hand;"
+        <Button text="✎ Edit"
+                style="-fx-background-color:#FFC107;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-cursor:hand;"
                 onAction="#handleEdit"/>
         <Button text="📥 Restock"
                 style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 14;-fx-background-radius:8;-fx-cursor:hand;"

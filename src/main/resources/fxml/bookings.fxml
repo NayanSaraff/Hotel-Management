@@ -33,7 +33,7 @@
         <Button fx:id="btnCancel" text="❌  Cancel Booking"
                 style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
                 onAction="#handleCancelBooking" disable="true" minWidth="160"/>
-        <Button fx:id="btnInvoice" text="🧾  Generate Invoice"
+        <Button fx:id="btnInvoice" text="🗎  Generate Invoice"
                 style="-fx-background-color:#8e44ad;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
                 onAction="#handleGenerateInvoice" disable="true" minWidth="175"/>
     </HBox>

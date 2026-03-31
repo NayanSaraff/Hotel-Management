@@ -72,3 +72,7 @@ installer/
 # ── Test Output ──────────────────────────────────────
 test-output/
 surefire-reports/
+
+# Assets to ignore
+*.png
+*.ttf

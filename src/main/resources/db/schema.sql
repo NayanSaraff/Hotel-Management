@@ -225,19 +225,19 @@ CREATE INDEX idx_inventory_lowstock    ON INVENTORY(QUANTITY_AVAILABLE, MINIMUM_
 INSERT INTO USERS (USERNAME, PASSWORD_HASH, FULL_NAME, EMAIL, PHONE, ROLE)
 VALUES ('admin',
         '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
-        'System Administrator', 'admin@grandhotel.com', '9999900000', 'ADMIN');
+        'System Administrator', 'admin@marcelliliving.com', '9999900000', 'ADMIN');
 
 -- Manager
 INSERT INTO USERS (USERNAME, PASSWORD_HASH, FULL_NAME, EMAIL, PHONE, ROLE)
 VALUES ('manager',
         '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
-        'Hotel Manager', 'manager@grandhotel.com', '9999900001', 'MANAGER');
+        'Hotel Manager', 'manager@marcelliliving.com', '9999900001', 'MANAGER');
 
 -- Receptionist
 INSERT INTO USERS (USERNAME, PASSWORD_HASH, FULL_NAME, EMAIL, PHONE, ROLE)
 VALUES ('reception',
         '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
-        'Front Desk Staff', 'reception@grandhotel.com', '9999900002', 'RECEPTIONIST');
+        'Front Desk Staff', 'reception@marcelliliving.com', '9999900002', 'RECEPTIONIST');
 
 -- Sample Rooms
 INSERT INTO ROOMS (ROOM_NUMBER,CATEGORY,FLOOR,CAPACITY,PRICE_PER_NIGHT,STATUS,BED_TYPE,HAS_AC,HAS_WIFI,HAS_TV,DESCRIPTION)
@@ -267,11 +267,11 @@ VALUES ('Floor Cleaner','CLEANING',30,10,'litres',180,'CleanCo');
 
 -- Sample Staff
 INSERT INTO STAFF (EMPLOYEE_ID,FIRST_NAME,LAST_NAME,DEPARTMENT,DESIGNATION,PHONE,EMAIL,SALARY)
-VALUES ('EMP001','Ravi','Kumar','FRONT_DESK','Senior Receptionist','9876501234','ravi@grandhotel.com',35000);
+VALUES ('EMP001','Ravi','Kumar','FRONT_DESK','Senior Receptionist','9876501234','ravi@marcelliliving.com',35000);
 INSERT INTO STAFF (EMPLOYEE_ID,FIRST_NAME,LAST_NAME,DEPARTMENT,DESIGNATION,PHONE,EMAIL,SALARY)
-VALUES ('EMP002','Priya','Sharma','HOUSEKEEPING','Housekeeping Supervisor','9876501235','priya@grandhotel.com',28000);
+VALUES ('EMP002','Priya','Sharma','HOUSEKEEPING','Housekeeping Supervisor','9876501235','priya@marcelliliving.com',28000);
 INSERT INTO STAFF (EMPLOYEE_ID,FIRST_NAME,LAST_NAME,DEPARTMENT,DESIGNATION,PHONE,EMAIL,SALARY)
-VALUES ('EMP003','Suresh','Nair','FOOD_BEVERAGE','Head Chef','9876501236','suresh@grandhotel.com',45000);
+VALUES ('EMP003','Suresh','Nair','FOOD_BEVERAGE','Head Chef','9876501236','suresh@marcelliliving.com',45000);
 
 COMMIT;
 

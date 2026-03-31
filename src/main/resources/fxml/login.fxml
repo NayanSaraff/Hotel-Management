@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
@@ -14,9 +15,11 @@
         <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
 
         <!-- Logo / Title -->
-        <Label text="🏨" style="-fx-font-size:42;"/>
-        <Label text="Hotel Management System" styleClass="login-title"/>
-        <Label text="Sign in to your account" styleClass="login-subtitle"/>
+        <VBox alignment="CENTER" spacing="1">
+            <ImageView fx:id="logoImageView" fitWidth="110" fitHeight="110" preserveRatio="true" smooth="true"/>
+            <Label text="The Marcelli" styleClass="login-title"/>
+            <Label text="Sign in to your account" styleClass="login-subtitle"/>
+        </VBox>
 
         <Separator/>
 
