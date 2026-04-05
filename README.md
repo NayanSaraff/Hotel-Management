@@ -1,216 +1,359 @@
-# 🏨 Hotel Management System
+# Hotel Management System + Customer Portal
 
-A full-featured desktop Hotel Management System built with **JavaFX**, **Oracle Database**, **CSS**, and **Maven**.
+Unified project for hotel staff operations and guest self-service, built on JavaFX, Oracle, and Maven.
 
----
-
-## 📁 Project Structure
-
-```
-HotelManagementSystem/
-├── pom.xml                              ← Maven build configuration
-└── src/
-    ├── main/
-    │   ├── java/com/hotel/
-    │   │   ├── MainApp.java             ← JavaFX Application entry point
-    │   │   │
-    │   │   ├── model/                   ← Domain entity classes
-    │   │   │   ├── User.java
-    │   │   │   ├── Room.java
-    │   │   │   ├── Customer.java
-    │   │   │   ├── Booking.java
-    │   │   │   ├── Payment.java
-    │   │   │   ├── Staff.java
-    │   │   │   └── InventoryItem.java
-    │   │   │
-    │   │   ├── dao/                     ← Data Access Objects (JDBC / Oracle)
-    │   │   │   ├── GenericDAO.java      ← Generic CRUD interface
-    │   │   │   ├── UserDAO.java
-    │   │   │   ├── RoomDAO.java
-    │   │   │   ├── CustomerDAO.java
-    │   │   │   ├── BookingDAO.java
-    │   │   │   ├── PaymentDAO.java
-    │   │   │   ├── StaffDAO.java
-    │   │   │   └── InventoryDAO.java
-    │   │   │
-    │   │   ├── service/                 ← Business Logic Layer
-    │   │   │   ├── AuthService.java
-    │   │   │   ├── BookingService.java
-    │   │   │   ├── RoomService.java
-    │   │   │   ├── CustomerService.java
-    │   │   │   ├── ReportService.java
-    │   │   │   └── InvoiceService.java  ← PDF invoice generation (iText)
-    │   │   │
-    │   │   ├── controllers/             ← JavaFX FXML Controllers
-    │   │   │   ├── LoginController.java
-    │   │   │   ├── DashboardController.java
-    │   │   │   ├── RoomController.java
-    │   │   │   ├── BookingController.java
-    │   │   │   ├── CustomerController.java
-    │   │   │   ├── StaffController.java
-    │   │   │   ├── InventoryController.java
-    │   │   │   └── ReportsController.java
-    │   │   │
-    │   │   └── util/                    ← Utility / Helper classes
-    │   │       ├── DatabaseConnection.java
-    │   │       ├── SessionManager.java
-    │   │       ├── AlertUtil.java
-    │   │       └── GSTCalculator.java
-    │   │
-    │   └── resources/
-    │       ├── fxml/                    ← JavaFX FXML UI layouts
-    │       │   ├── login.fxml
-    │       │   ├── dashboard.fxml
-    │       │   ├── rooms.fxml
-    │       │   ├── bookings.fxml
-    │       │   ├── customers.fxml
-    │       │   ├── staff.fxml
-    │       │   ├── inventory.fxml
-    │       │   └── reports.fxml
-    │       ├── css/
-    │       │   └── styles.css           ← Full UI theme (Navy + Gold)
-    │       ├── db/
-    │       │   └── schema.sql           ← Oracle DDL + seed data + triggers
-    │       ├── db.properties            ← Database connection config
-    │       └── logback.xml              ← SLF4J logging config
-    │
-    └── test/
-        └── java/com/hotel/              ← JUnit 5 test classes (extendable)
-```
+![Java](https://img.shields.io/badge/Java-17-1f6feb)
+![JavaFX](https://img.shields.io/badge/JavaFX-21-0a2540)
+![Maven](https://img.shields.io/badge/Maven-3.8%2B-c71a36)
+![Oracle](https://img.shields.io/badge/Oracle-XE%20%2F%2021c-f80000)
+![Portal](https://img.shields.io/badge/Profile-portal-7c3aed)
 
 ---
 
-## 🛠️ Technology Stack
+## Index
 
-| Layer        | Technology                        |
-|--------------|-----------------------------------|
-| UI           | JavaFX 21 (FXML + Controllers)    |
-| Styling      | JavaFX CSS                        |
-| Business     | Java 17 (OOP, layered arch.)      |
-| Database     | Oracle XE / 21c (JDBC)            |
-| Build        | Maven 3.9+                        |
-| PDF Reports  | iText 5                           |
-| Logging      | SLF4J + Logback                   |
-| Security     | jBCrypt password hashing          |
+- [Overview](#overview)
+- [Applications in This Repository](#applications-in-this-repository)
+- [Feature Summary](#feature-summary)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Database Setup](#database-setup)
+- [Configuration](#configuration)
+- [Run Commands](#run-commands)
+- [Default Credentials](#default-credentials)
+- [Portal User Journey](#portal-user-journey)
+- [Staff and Portal Synchronization](#staff-and-portal-synchronization)
+- [Staff Modules](#staff-modules)
+- [Portal Modules](#portal-modules)
+- [Architecture](#architecture)
+- [Folder Structure](#folder-structure)
+- [Useful Commands](#useful-commands)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## 🚀 Getting Started
+## Overview
 
-### 1. Prerequisites
+This repository contains two applications that run independently but share the same Oracle database:
+
+- Hotel Staff Application: front desk, operations, billing, reports, management
+- Customer Portal Application: booking, requests, food ordering, account management
+
+The shared data model enables real-time operational flow between guests and hotel staff.
+
+---
+
+## Applications in This Repository
+
+### 1) Hotel Staff Application
+
+- main class: com.hotel.MainApp
+- purpose: daily hotel operations for admin, manager, and receptionist roles
+
+### 2) Customer Portal Application
+
+- main class: com.hotel.portal.CustomerPortalApp
+- Maven profile: portal
+- purpose: guest self-service before and during stay
+
+---
+
+## Feature Summary
+
+### Staff Side
+
+- role-based authentication
+- dashboard metrics and reports
+- booking lifecycle: create, check-in, check-out, cancel
+- customer and room management
+- inventory, staff, expense, payment workflows
+- invoice generation and email flows
+- portal requests management (bookings, service requests, food orders, calls)
+
+### Customer Portal Side
+
+- registration and login
+- room search and booking creation
+- service requests (housekeeping, laundry, taxi, wake-up, maintenance, more)
+- food ordering with status tracking
+- profile and password management
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Java 17 |
+| UI | JavaFX 21 (FXML + Controllers) |
+| Build | Maven |
+| Database | Oracle via ojdbc8 21.9 |
+| Connection Pool | HikariCP |
+| Security | BCrypt |
+| Reporting/PDF | iText 5 |
+| Logging | SLF4J + Logback |
+| Testing | JUnit 5 |
+
+---
+
+## Prerequisites
+
 - Java 17+
 - Maven 3.8+
-- Oracle Database XE (or 21c)
-- Oracle JDBC driver available via Maven Central
+- Oracle XE / 21c
 
-### 2. Database Setup
+---
+
+## Quick Start
+
+1. Configure db.properties
+2. Run SQL scripts in order
+3. Run tests
+4. Launch staff app or portal app
+
+---
+
+## Database Setup
+
+Run scripts in this order:
+
 ```sql
--- Connect as SYSDBA and create the schema user
-CREATE USER hotel_admin IDENTIFIED BY hotel@123;
-GRANT CONNECT, RESOURCE, CREATE VIEW TO hotel_admin;
-
--- Then run the schema script as hotel_admin:
 @src/main/resources/db/schema.sql
+@src/main/resources/db/new_tables.sql
+@src/main/resources/db/portal_tables.sql
 ```
 
-### 3. Configure DB Connection
-Edit `src/main/resources/db.properties`:
+portal_tables.sql is required for customer portal and portal management tabs inside staff app.
+
+---
+
+## Configuration
+
+Edit src/main/resources/db.properties:
+
 ```properties
 db.url=jdbc:oracle:thin:@localhost:1521:XE
 db.username=hotel_admin
 db.password=hotel@123
 ```
 
-### 4. Build and Run
+Both applications use this same configuration.
+
+---
+
+## Run Commands
+
+### Staff Application
+
 ```bash
-# Compile & run with JavaFX Maven plugin
+mvn javafx:run
+```
+
+### Customer Portal Application
+
+```bash
+mvn javafx:run -Pportal
+```
+
+---
+
+## Default Credentials
+
+### Staff Users
+
+| Role | Username | Password |
+|---|---|---|
+| Admin | admin | admin123 |
+| Manager | manager | manager123 |
+| Reception | reception | reception123 |
+
+### Portal Users
+
+- guests self-register in the portal login screen
+- portal credentials are separate from staff users
+
+---
+
+## Portal User Journey
+
+1. Register account
+2. Login
+3. Search rooms and create booking
+4. Raise service requests
+5. Place food order and track status
+6. Update profile/password
+
+---
+
+## Staff and Portal Synchronization
+
+Synchronization is table-driven through shared Oracle data:
+
+- portal bookings are visible in staff booking/portal requests screens
+- service request status updates flow back to the portal
+- food order status changes flow back to portal tracking
+- checkout and related booking state updates are reflected via refresh/sync paths
+
+---
+
+## Staff Modules
+
+- Login and session management
+- Dashboard and operational summary
+- Booking management
+- Room management
+- Customer management
+- Inventory management
+- Staff management
+- Payments and expenses
+- Reports and analytics
+- Portal requests management
+
+---
+
+## Portal Modules
+
+- Login/Registration
+- My Bookings
+- Book Room
+- Services
+- Food and Dining
+- My Account
+
+---
+
+## Architecture
+
+```text
+JavaFX UI (Staff + Portal)
+        |
+Service Layer
+        |
+DAO Layer (JDBC)
+        |
+Oracle Database (shared schema)
+```
+
+---
+
+## Folder Structure
+
+### Hotel Staff Application Structure
+
+```text
+src/
+├── main/
+│   ├── java/com/hotel/
+│   │   ├── MainApp.java
+│   │   ├── controllers/
+│   │   │   ├── BookingController.java
+│   │   │   ├── CustomerController.java
+│   │   │   ├── DashboardController.java
+│   │   │   ├── ExpenseController.java
+│   │   │   ├── InventoryController.java
+│   │   │   ├── LoginController.java
+│   │   │   ├── PaymentController.java
+│   │   │   ├── PortalRequestsController.java
+│   │   │   ├── ReportsController.java
+│   │   │   ├── RoomController.java
+│   │   │   └── StaffController.java
+│   │   ├── dao/
+│   │   ├── model/
+│   │   ├── service/
+│   │   └── util/
+│   └── resources/
+│       ├── css/
+│       │   └── styles.css
+│       ├── db/
+│       │   ├── schema.sql
+│       │   ├── new_tables.sql
+│       │   └── portal_tables.sql
+│       ├── fxml/
+│       │   ├── bookings.fxml
+│       │   ├── customers.fxml
+│       │   ├── dashboard.fxml
+│       │   ├── expenses.fxml
+│       │   ├── inventory.fxml
+│       │   ├── login.fxml
+│       │   ├── payments.fxml
+│       │   ├── portal_requests.fxml
+│       │   ├── reports.fxml
+│       │   ├── rooms.fxml
+│       │   └── staff.fxml
+│       ├── db.properties
+│       └── logback.xml
+└── test/
+        └── java/
+```
+
+### Customer Portal Application Structure
+
+```text
+src/
+├── main/
+│   ├── java/com/hotel/portal/
+│   │   ├── CustomerPortalApp.java
+│   │   ├── controllers/
+│   │   │   ├── PortalLoginController.java
+│   │   │   └── PortalDashboardController.java
+│   │   ├── dao/
+│   │   │   ├── AvailableServicesDAO.java
+│   │   │   ├── CustomerAccountDAO.java
+│   │   │   ├── FoodOrderDAO.java
+│   │   │   └── ServiceRequestDAO.java
+│   │   ├── model/
+│   │   │   ├── CustomerAccount.java
+│   │   │   ├── FoodMenuItem.java
+│   │   │   ├── FoodOrder.java
+│   │   │   └── ServiceRequest.java
+│   │   └── service/
+│   │       └── PortalSession.java
+│   └── resources/
+│       ├── css/
+│       │   └── portal_styles.css
+│       └── fxml/portal/
+│           ├── portal_dashboard.fxml
+│           └── portal_login.fxml
+└── test/
+        └── java/
+```
+
+---
+
+## Useful Commands
+
+```bash
+# run staff app
 mvn javafx:run
 
-# Or build a fat JAR
+# run customer portal app
+mvn javafx:run -Pportal
+
+# run tests
+mvn test -q
+
+# package
 mvn clean package
-java -jar target/HotelManagementSystem-1.0-SNAPSHOT.jar
 ```
 
 ---
 
-## 🔑 Default Login Credentials
+## Troubleshooting
 
-| Role         | Username    | Password   |
-|--------------|-------------|------------|
-| Admin        | `admin`     | `Admin@123`|
-| Manager      | `manager`   | `Admin@123`|
-| Receptionist | `reception` | `Admin@123`|
+### DB connection issues
 
----
+- verify db.properties values
+- verify Oracle listener/service name and credentials
+- rerun SQL scripts if schema is incomplete
 
-## ✨ Features
+### Login issues
 
-### Core Modules
-- **Login** – BCrypt-secured authentication with role-based access
-- **Dashboard** – Live stat cards (rooms, bookings, revenue, check-ins)
-- **Room Management** – Add, edit, delete rooms; real-time status tracking
-- **Booking Management** – Create bookings, check-in/check-out, cancel, invoice
-- **Customer Management** – Register and search guests, ID verification
-- **Staff Management** – Employee records, departments (Admin only)
-- **Inventory Management** – Track stock, low-stock alerts, restock
-- **Reports** – Monthly revenue, occupancy rate, category breakdown, top rooms
+- staff users must use staff credentials shown above
+- portal users must register via portal UI
 
-### Technical Highlights
-- **DAO Pattern** – All DB operations isolated in DAO classes
-- **Service Layer** – Business logic separate from UI and DB
-- **GST Calculation** – India GST slabs (0% / 12% / 18%) applied automatically
-- **PDF Invoice** – iText-based professional invoice generator
-- **Double-booking prevention** – Oracle trigger-level enforcement
-- **Transaction management** – Commit/rollback on every DAO operation
-- **Logging** – Logback file + console logging
+### Portal/staff data mismatch
 
----
+- confirm both apps point to the same schema
+- use refresh/sync controls in the relevant modules
 
-## 🗄️ Database Design
-
-```
-USERS          → BOOKINGS (USER_ID)
-ROOMS          → BOOKINGS (ROOM_ID)
-CUSTOMERS      → BOOKINGS (CUSTOMER_ID)
-BOOKINGS       → PAYMENTS (BOOKING_ID)
-USERS          → STAFF    (USER_ID)
-```
-
-**Oracle-specific features used:**
-- Sequences for auto-increment PKs
-- Check constraints on enums
-- Foreign keys with cascade
-- Trigger `trg_prevent_double_booking`
-- Stored procedure `SP_MONTHLY_REVENUE_REPORT`
-- Views `V_BOOKING_DETAILS`, `V_ROOM_OCCUPANCY`
-
----
-
-## 📌 Architecture
-
-```
-┌─────────────────────────────────────┐
-│        JavaFX UI Layer              │
-│   (FXML + Controllers + CSS)        │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│        Service Layer                │
-│  (Business Logic, Validation, GST)  │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│          DAO Layer                  │
-│   (JDBC + Oracle SQL Queries)       │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│       Oracle Database               │
-│  (Tables, Views, Triggers, Procs)   │
-└─────────────────────────────────────┘
-```
-
----
-
-## 📄 License
-Academic / Educational project – Week 10 JavaFX submission.
