@@ -79,7 +79,7 @@ public class StaffController {
             }
         });
         staffTable.getColumns().forEach(col -> col.setResizable(false));
-staffTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        staffTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     }
 
     private void loadStaff() {
@@ -108,6 +108,24 @@ staffTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         isEditing = true; populateForm(selectedStaff);
         formTitleLabel.setText("Edit – " + selectedStaff.getFullName());
         showForm(true);
+    }
+
+    @FXML private void handleDelete() {
+        Staff s = staffTable.getSelectionModel().getSelectedItem();
+        if (s == null) {
+            AlertUtil.showWarning("Select Staff", "Please select a staff member to deactivate.");
+            return;
+        }
+        if (!AlertUtil.showConfirm("Deactivate Staff",
+                "Deactivate " + s.getFullName() + "? This will mark the record inactive.")) {
+            return;
+        }
+        if (staffDAO.delete(s.getStaffId())) {
+            AlertUtil.showInfo("Deactivated", "Staff member deactivated successfully.");
+            loadStaff();
+        } else {
+            AlertUtil.showError("Error", "Could not deactivate staff member.");
+        }
     }
 
     @FXML private void handleSave() {

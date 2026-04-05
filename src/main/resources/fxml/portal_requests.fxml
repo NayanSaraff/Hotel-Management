@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.openjfx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      spacing="0"
+      style="-fx-background-color:#f4f7fb;">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12"
+          style="-fx-background-color:white;-fx-border-color:transparent transparent #dde3eb transparent;-fx-border-width:0 0 1 0;">
+        <padding><Insets top="14" right="20" bottom="14" left="20"/></padding>
+        <Button text="← Back" onAction="#goBack"
+                style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:7 14;-fx-background-radius:8;-fx-cursor:hand;"/>
+        <Label text="🌐 Portal Activity &amp; Management"
+               style="-fx-font-size:18px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="🔄 Refresh All" onAction="#refreshAll"
+                style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:8;-fx-cursor:hand;"/>
+    </HBox>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS"
+             style="-fx-background-color:#f4f7fb;">
+
+        <!-- ═══ Tab 1: Online Bookings ═══ -->
+        <Tab text="📋 Online Bookings">
+            <VBox spacing="10">
+                <padding><Insets top="14" right="14" bottom="14" left="14"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Bookings placed via Customer Portal"
+                           style="-fx-font-size:13px;-fx-text-fill:#555;"/>
+                    <Label fx:id="newBookingsBadge" text="0 unreviewed"
+                           style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:12;-fx-padding:3 10;-fx-font-size:11px;"
+                           visible="false"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="✅ Mark All Reviewed" onAction="#markPortalBookingsSeen"
+                            style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:7 14;-fx-background-radius:8;-fx-cursor:hand;"/>
+                    <Button text="🔄" onAction="#refreshPortalBookings"
+                            style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-padding:7 12;-fx-background-radius:8;-fx-cursor:hand;"/>
+                </HBox>
+                <Label text="🟧 Orange = Portal bookings.  Use the Bookings module for check-in/check-out."
+                       style="-fx-font-size:11px;-fx-text-fill:#888;-fx-font-style:italic;"/>
+                <TableView fx:id="portalBookingTable" VBox.vgrow="ALWAYS"
+                           style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+                    <columns>
+                        <TableColumn fx:id="pbColRef"      text="Booking Ref"  prefWidth="140" style="-fx-text-fill: black;"/>
+                        <TableColumn fx:id="pbColGuest"    text="Guest"        prefWidth="160" style="-fx-text-fill: black;"/>
+                        <TableColumn fx:id="pbColRoom"     text="Room"         prefWidth="160" style="-fx-text-fill: black;"/>
+                        <TableColumn fx:id="pbColCheckIn"  text="Check-In"     prefWidth="110" style="-fx-text-fill: black;"/>
+                        <TableColumn fx:id="pbColCheckOut" text="Check-Out"    prefWidth="110" style="-fx-text-fill: black;"/>
+                        <TableColumn fx:id="pbColStatus"   text="Status"       prefWidth="110" style="-fx-text-fill: black;"/>
+                        <TableColumn fx:id="pbColTotal"    text="Total"        prefWidth="100" style="-fx-text-fill: black;"/>
+                    </columns>
+                    <placeholder><Label text="No portal bookings." style="-fx-text-fill:#aaa;"/></placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- ═══ Tab 2: Service Requests ═══ -->
+        <Tab text="🛎 Service Requests">
+            <SplitPane dividerPositions="0.63">
+                <VBox spacing="10">
+                    <padding><Insets top="14" right="12" bottom="14" left="14"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Customer Service Requests" style="-fx-font-size:13px;-fx-text-fill:#555;"/>
+                        <Label fx:id="unseenSvcBadge" text="0 new"
+                               style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:12;-fx-padding:3 10;-fx-font-size:11px;"
+                               visible="false"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Mark All Seen" onAction="#markAllServicesSeen"
+                                style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:6 14;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:12px;"/>
+                        <Button text="🔄" onAction="#refreshServiceRequests"
+                                style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-padding:6 12;-fx-background-radius:8;-fx-cursor:hand;"/>
+                    </HBox>
+                    <TableView fx:id="serviceTable" VBox.vgrow="ALWAYS"
+                               style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+                        <columns>
+                            <TableColumn fx:id="srColGuest"    text="Guest"     prefWidth="130" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="srColType"     text="Type"      prefWidth="160" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="srColStatus"   text="Status"    prefWidth="100" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="srColPriority" text="Priority"  prefWidth="80" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="srColTime"     text="Requested" prefWidth="120" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="srColDesc"     text="Details"   prefWidth="200" style="-fx-text-fill: black;"/>
+                        </columns>
+                        <placeholder><Label text="No service requests." style="-fx-text-fill:#2c3e50;"/></placeholder>
+                    </TableView>
+                </VBox>
+                <VBox spacing="12" style="-fx-background-color:white;-fx-border-color:#dde3eb;-fx-border-width:0 0 0 1;">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Update Request" style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+                    <Separator/>
+                    <Label text="New Status:" style="-fx-font-weight:bold;-fx-text-fill:#333;-fx-font-size:12px;"/>
+                    <ComboBox fx:id="svcStatusCombo" maxWidth="Infinity"
+                              style="-fx-background-color:white;-fx-border-color:#ccc;-fx-border-radius:6;-fx-background-radius:6;-fx-text-fill:#1f2937;"/>
+                    <Label text="Staff Notes:" style="-fx-font-weight:bold;-fx-text-fill:#333;-fx-font-size:12px;"/>
+                    <TextArea fx:id="svcNotesArea" promptText="Add staff notes..."
+                              prefRowCount="5"
+                              style="-fx-background-color:#f9fafb;-fx-border-color:#dde3eb;-fx-border-radius:8;-fx-background-radius:8;-fx-text-fill:#1f2937;-fx-prompt-text-fill:#6b7280;"/>
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <Button fx:id="updateSvcBtn" text="💾 Update Status" maxWidth="Infinity"
+                            onAction="#updateServiceRequest"
+                            style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:10 20;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"/>
+                </VBox>
+            </SplitPane>
+        </Tab>
+
+        <!-- ═══ Tab 3: Food Orders ═══ -->
+        <Tab text="🍽 Food Orders">
+            <SplitPane dividerPositions="0.55">
+                <VBox spacing="10">
+                    <padding><Insets top="14" right="12" bottom="14" left="14"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Customer Food Orders" style="-fx-font-size:13px;-fx-text-fill:#555;"/>
+                        <Label fx:id="unseenFoodBadge" text="0 new"
+                               style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-background-radius:12;-fx-padding:3 10;-fx-font-size:11px;"
+                               visible="false"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Mark All Seen" onAction="#markAllFoodSeen"
+                                style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:6 14;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:12px;"/>
+                        <Button text="🔄" onAction="#refreshFoodOrders"
+                                style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-padding:6 12;-fx-background-radius:8;-fx-cursor:hand;"/>
+                    </HBox>
+                    <TableView fx:id="foodOrderTable" VBox.vgrow="ALWAYS"
+                               style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+                        <columns>
+                            <TableColumn fx:id="foColId"     text="Order #"    prefWidth="80"/>
+                            <TableColumn fx:id="foColGuest"  text="Guest"      prefWidth="130"/>
+                            <TableColumn fx:id="foColStatus" text="Status"     prefWidth="150"/>
+                            <TableColumn fx:id="foColTotal"  text="Total"      prefWidth="90"/>
+                            <TableColumn fx:id="foColTime"   text="Placed"     prefWidth="120"/>
+                            <TableColumn fx:id="foColItems"  text="Items"      prefWidth="220"/>
+                        </columns>
+                        <placeholder><Label text="No food orders." style="-fx-text-fill:#2c3e50;"/></placeholder>
+                    </TableView>
+                </VBox>
+                <VBox spacing="12" style="-fx-background-color:white;-fx-border-color:#dde3eb;-fx-border-width:0 0 0 1;">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Order Details &amp; Status" style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+                    <Separator/>
+                    <Label fx:id="foodOrderDetailLabel" text="Select an order to see details."
+                           style="-fx-font-size:12px;-fx-text-fill:#444;-fx-font-family:monospace;" wrapText="true"/>
+                    <Separator/>
+                    <Label text="Update Status:" style="-fx-font-weight:bold;-fx-text-fill:#333;-fx-font-size:12px;"/>
+                    <ComboBox fx:id="foodStatusCombo" maxWidth="Infinity"
+                              style="-fx-background-color:white;-fx-border-color:#ccc;-fx-border-radius:6;-fx-background-radius:6;-fx-text-fill:#1f2937;"/>
+                    <Label text="Updating to DELIVERED notifies the customer's live tracker."
+                           style="-fx-font-size:11px;-fx-text-fill:#888;" wrapText="true"/>
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <Button fx:id="updateFoodBtn" text="🍴 Update Order Status" maxWidth="Infinity"
+                            onAction="#updateFoodOrderStatus"
+                            style="-fx-background-color:#e67e22;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:10 20;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"/>
+                </VBox>
+            </SplitPane>
+        </Tab>
+
+        <!-- ═══ Tab 4: Phone Calls (Receptionist) ═══ -->
+        <Tab text="📞 Phone Calls">
+            <VBox fx:id="phoneCallsPanel" spacing="14">
+                <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label text="Incoming Guest Calls" style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+                    <Label text="(Receptionist only — auto-refreshes every 5 seconds)"
+                           style="-fx-font-size:11px;-fx-text-fill:#888;-fx-font-style:italic;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="🔄 Refresh" onAction="#refreshCalls"
+                            style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:7 16;-fx-background-radius:8;-fx-cursor:hand;"/>
+                </HBox>
+                <Label fx:id="ringingCountLabel" text="Checking for calls..."
+                       style="-fx-font-size:13px;-fx-text-fill:#888;"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                            style="-fx-background-color:transparent;-fx-border-color:transparent;">
+                    <VBox fx:id="ringingCallsBox" spacing="10">
+                        <padding><Insets top="4"/></padding>
+                    </VBox>
+                </ScrollPane>
+            </VBox>
+        </Tab>
+
+        <!-- ═══ Tab 5: Manage Services ═══ -->
+        <Tab text="⚙️ Services">
+            <SplitPane dividerPositions="0.58">
+                <!-- Current services table -->
+                <VBox spacing="10">
+                    <padding><Insets top="14" right="12" bottom="14" left="14"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Available Services (shown to customers)"
+                               style="-fx-font-size:13px;-fx-text-fill:#555;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="🔄" onAction="#refreshServicesMgmt"
+                                style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-padding:6 12;-fx-background-radius:8;-fx-cursor:hand;"/>
+                    </HBox>
+                    <TableView fx:id="svcMgmtTable" VBox.vgrow="ALWAYS"
+                               style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
+                        <columns>
+                            <TableColumn fx:id="smColIcon"   text="Icon"   prefWidth="55"/>
+                            <TableColumn fx:id="smColName"   text="Name"   prefWidth="170"/>
+                            <TableColumn fx:id="smColType"   text="Type"   prefWidth="140"/>
+                            <TableColumn fx:id="smColActive" text="Active" prefWidth="65"/>
+                            <TableColumn fx:id="smColId"     text="ID"     prefWidth="50"/>
+                        </columns>
+                        <placeholder><Label text="No services configured." style="-fx-text-fill:#2c3e50;"/></placeholder>
+                    </TableView>
+                    <HBox spacing="10">
+                        <Button text="✅ Toggle Active" onAction="#toggleServiceActive"
+                                style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 16;-fx-background-radius:8;-fx-cursor:hand;"/>
+                        <Button text="🗑 Delete" onAction="#deleteService"
+                                style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 16;-fx-background-radius:8;-fx-cursor:hand;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Add service form -->
+                <VBox spacing="12" style="-fx-background-color:white;-fx-border-color:#dde3eb;-fx-border-width:0 0 0 1;">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <Label text="Add New Service" style="-fx-font-size:15px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+                    <Separator/>
+
+                    <Label text="Service Name *" style="-fx-font-weight:bold;-fx-text-fill:#333;-fx-font-size:12px;"/>
+                    <TextField fx:id="newSvcName" promptText="e.g. Spa Appointment"
+                               style="-fx-background-color:#f9f9f9;-fx-border-color:#ccc;-fx-border-radius:6;-fx-padding:8 12;-fx-text-fill:#1f2937;"/>
+
+                    <Label text="Service Type *" style="-fx-font-weight:bold;-fx-text-fill:#333;-fx-font-size:12px;"/>
+                    <ComboBox fx:id="newSvcTypeCombo" maxWidth="Infinity"
+                              style="-fx-background-color:white;-fx-border-color:#ccc;-fx-border-radius:6;-fx-background-radius:6;-fx-text-fill:#1f2937;"/>
+
+                    <Label text="Icon (emoji)" style="-fx-font-weight:bold;-fx-text-fill:#333;-fx-font-size:12px;"/>
+                    <TextField fx:id="newSvcIcon" promptText="e.g. 💆 or 🎰"
+                               style="-fx-background-color:#f9f9f9;-fx-border-color:#ccc;-fx-border-radius:6;-fx-padding:8 12;-fx-text-fill:#1f2937;"/>
+
+                    <Label text="Description" style="-fx-font-weight:bold;-fx-text-fill:#333;-fx-font-size:12px;"/>
+                    <TextArea fx:id="newSvcDesc" promptText="Brief description..."
+                              prefRowCount="3"
+                              style="-fx-background-color:#f9fafb;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-text-fill:#1f2937;-fx-prompt-text-fill:#6b7280;"/>
+
+                    <Region VBox.vgrow="ALWAYS"/>
+                    <Button text="➕ Add Service" maxWidth="Infinity"
+                            onAction="#addService"
+                            style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:10 20;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"/>
+                </VBox>
+            </SplitPane>
+        </Tab>
+
+    </TabPane>
+</VBox>

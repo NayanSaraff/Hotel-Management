@@ -18,6 +18,9 @@
                 style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:8;-fx-cursor:hand;"/>
     </HBox>
 
+        <Label text="Payments are recorded automatically during check-in, check-out, and refunds. This screen is read-only."
+            style="-fx-background-color:#fff3cd;-fx-text-fill:#856404;-fx-font-size:12px;-fx-font-weight:bold;-fx-padding:8 12;-fx-background-radius:8;" wrapText="true"/>
+
     <Label fx:id="totalLabel" text="Total Received: ₹ 0.00"
            style="-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
 
@@ -32,6 +35,9 @@
             <TableColumn fx:id="colTransaction" text="Transaction ID" prefWidth="150" minWidth="150"/>
             <TableColumn fx:id="colRemarks"     text="Remarks"        prefWidth="180" minWidth="180"/>
         </columns>
+        <placeholder>
+            <Label text="No data available." style="-fx-text-fill:#aaa;-fx-font-size:13px;"/>
+        </placeholder>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>

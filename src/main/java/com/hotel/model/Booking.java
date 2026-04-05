@@ -13,6 +13,10 @@ public class Booking {
         CONFIRMED, CHECKED_IN, CHECKED_OUT, CANCELLED, NO_SHOW
     }
 
+    public enum Source {
+        STAFF, PORTAL
+    }
+
     private int bookingId;
     private String bookingReference;   // e.g. "HMS-2024-001"
     private int customerId;
@@ -33,6 +37,7 @@ public class Booking {
     private double balanceDue;
 
     private Status status;
+    private Source bookingSource;      // STAFF or PORTAL
     private String specialRequests;
     private LocalDateTime bookingDate;
 
@@ -102,6 +107,9 @@ public class Booking {
 
     public Status getStatus()                    { return status; }
     public void setStatus(Status s)              { this.status = s; }
+
+    public Source getBookingSource()             { return bookingSource; }
+    public void setBookingSource(Source s)       { this.bookingSource = s; }
 
     public String getSpecialRequests()           { return specialRequests; }
     public void setSpecialRequests(String s)     { this.specialRequests = s; }

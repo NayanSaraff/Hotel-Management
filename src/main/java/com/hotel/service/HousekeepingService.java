@@ -13,19 +13,32 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Housekeeping Service:
+ * Housekeeping Service (Singleton):
  * - When a guest checks out, room is marked HOUSEKEEPING.
  * - After 20 minutes, room is automatically marked AVAILABLE.
- * - Provides status messages and task tracking.
+ * - Thread-safe singleton with shutdown support to prevent executor service leaks.
  */
 public class HousekeepingService {
 
     private static final Logger logger = LoggerFactory.getLogger(HousekeepingService.class);
     private static final int CLEANING_DELAY_MINUTES = 20;
 
+    private static HousekeepingService instance;
     private final RoomDAO roomDAO = new RoomDAO();
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(2);
+
+    private HousekeepingService() {}
+
+    /**
+     * Get singleton instance (thread-safe).
+     */
+    public static synchronized HousekeepingService getInstance() {
+        if (instance == null) {
+            instance = new HousekeepingService();
+        }
+        return instance;
+    }
 
     // ── Trigger Housekeeping After Checkout ───────────────────────────────
 
@@ -124,10 +137,25 @@ public class HousekeepingService {
         } catch (SQLException e) {
             // Table may not exist yet — silently skip
             logger.debug("Housekeeping log skipped: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 
     public void shutdown() {
-        scheduler.shutdown();
+        try {
+            if (scheduler != null && !scheduler.isShutdown()) {
+                logger.info("Shutting down HousekeepingService scheduler...");
+                scheduler.shutdown();
+                if (!scheduler.awaitTermination(10, TimeUnit.SECONDS)) {
+                    logger.warn("HousekeepingService scheduler did not terminate within 10 seconds; forcing shutdown");
+                    scheduler.shutdownNow();
+                }
+                logger.info("HousekeepingService scheduler shut down successfully");
+            }
+        } catch (InterruptedException e) {
+            logger.error("Interrupted while shutting down HousekeepingService: {}", e.getMessage());
+            scheduler.shutdownNow();
+        }
     }
 }

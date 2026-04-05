@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.openjfx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           styleClass="portal-login-root">
+
+    <VBox alignment="CENTER" spacing="0" styleClass="portal-login-bg">
+
+        <!-- Login Card -->
+        <VBox fx:id="loginPane" alignment="CENTER" spacing="16"
+              styleClass="portal-login-card" maxWidth="400">
+            <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+
+            <Label text="🏨 Guest Portal" styleClass="portal-login-title"/>
+            <Label text="Marcelli Living" styleClass="portal-login-subtitle"/>
+            <Separator/>
+
+            <Label text="Email" styleClass="portal-field-label" alignment="CENTER_LEFT"
+                   maxWidth="Infinity"/>
+            <TextField fx:id="loginEmailField" promptText="your@email.com"
+                       styleClass="portal-text-field"/>
+
+            <Label text="Password" styleClass="portal-field-label" alignment="CENTER_LEFT"
+                   maxWidth="Infinity"/>
+            <PasswordField fx:id="loginPasswordField" promptText="Enter your password"
+                           styleClass="portal-text-field"/>
+
+            <Label fx:id="loginErrorLabel" styleClass="portal-error-label"
+                   wrapText="true" maxWidth="320"/>
+
+            <Button fx:id="loginBtn" text="Sign In" maxWidth="Infinity"
+                    styleClass="portal-primary-btn"
+                    onAction="#handleLogin"/>
+
+            <ProgressIndicator fx:id="loginSpinner" prefWidth="28" prefHeight="28"/>
+
+            <Separator opacity="0.4"/>
+
+            <HBox alignment="CENTER" spacing="8">
+                <Label text="New guest?" styleClass="portal-hint-text"/>
+                <Hyperlink text="Create an account" onAction="#showRegister"
+                           styleClass="portal-link"/>
+            </HBox>
+        </VBox>
+
+        <!-- Register Card -->
+        <VBox fx:id="registerPane" alignment="CENTER" spacing="12"
+              styleClass="portal-login-card" maxWidth="440" visible="false" managed="false">
+            <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+
+            <Label text="Create Your Account" styleClass="portal-login-title"/>
+            <Label text="Join Marcelli Living Guest Portal" styleClass="portal-login-subtitle"/>
+            <Separator/>
+
+            <GridPane hgap="12" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50"/>
+                    <ColumnConstraints percentWidth="50"/>
+                </columnConstraints>
+
+                <Label text="First Name *" styleClass="portal-field-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label text="Last Name *"  styleClass="portal-field-label" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <TextField fx:id="regFirstName" promptText="First name"
+                           styleClass="portal-text-field" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="regLastName" promptText="Last name"
+                           styleClass="portal-text-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Email *" styleClass="portal-field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label text="Phone *" styleClass="portal-field-label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <TextField fx:id="regEmail" promptText="email@example.com"
+                           styleClass="portal-text-field" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="regPhone" promptText="10-digit number"
+                           styleClass="portal-text-field" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="City" styleClass="portal-field-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <Label text="Country" styleClass="portal-field-label" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <TextField fx:id="regCity" promptText="Your city"
+                           styleClass="portal-text-field" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <TextField fx:id="regCountry" promptText="India"
+                           styleClass="portal-text-field" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                <Label text="Password *" styleClass="portal-field-label" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <Label text="Confirm Password *" styleClass="portal-field-label" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                <PasswordField fx:id="regPassword" promptText="Min 6 characters"
+                               styleClass="portal-text-field" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                <PasswordField fx:id="regConfirmPassword" promptText="Re-enter password"
+                               styleClass="portal-text-field" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+            </GridPane>
+
+            <Label fx:id="registerErrorLabel" styleClass="portal-error-label"
+                   wrapText="true" maxWidth="380"/>
+
+            <ProgressIndicator fx:id="regSpinner" prefWidth="28" prefHeight="28"/>
+
+            <Button text="Create Account" maxWidth="Infinity"
+                    styleClass="portal-primary-btn"
+                    onAction="#handleRegister"/>
+
+            <HBox alignment="CENTER" spacing="8">
+                <Label text="Already registered?" styleClass="portal-hint-text"/>
+                <Hyperlink text="Sign in here" onAction="#showLogin"
+                           styleClass="portal-link"/>
+            </HBox>
+        </VBox>
+
+    </VBox>
+</StackPane>

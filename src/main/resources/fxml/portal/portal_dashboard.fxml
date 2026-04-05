@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.openjfx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            styleClass="portal-root">
+
+    <!-- ══ TOP NAVBAR ════════════════════════════════════════════ -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="14" styleClass="portal-topbar">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            <Label text="♦ MARCELLI LIVING" styleClass="portal-brand-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="navTimeLabel"  styleClass="portal-nav-time" text="--:--"/>
+            <Label fx:id="navDateLabel"  styleClass="portal-nav-time" text=""/>
+            <Label text="● LIVE" styleClass="portal-status-chip"/>
+            <Label fx:id="welcomeLabel"  styleClass="portal-welcome-label" text=""/>
+                <Button fx:id="profileBtn" text="👤" styleClass="portal-profile-btn"
+                    onAction="#openProfile"/>
+            <Button text="Sign Out" styleClass="portal-logout-btn" onAction="#logout"/>
+        </HBox>
+    </top>
+
+    <!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+    <center>
+        <TabPane fx:id="mainTabPane" styleClass="portal-tab-pane" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- ═══ TAB 1: DASHBOARD HUB ════════════════════════ -->
+            <Tab text="🏠 Home">
+                <ScrollPane fitToWidth="true" styleClass="portal-scroll">
+                    <VBox spacing="20" styleClass="portal-dashboard-root">
+                        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                        <!-- Active Booking Banner -->
+                        <VBox fx:id="activeBookingBanner" spacing="0" visible="false" managed="false">
+                            <VBox spacing="10" styleClass="portal-booking-card">
+                                <HBox alignment="CENTER_LEFT" spacing="12">
+                                    <Label text="🎰 YOUR ACTIVE STAY" styleClass="portal-section-header"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label fx:id="activeBookingStatusLabel" text="CONFIRMED"
+                                           styleClass="portal-status-confirmed"/>
+                                </HBox>
+                                <HBox spacing="30">
+                                    <VBox spacing="4">
+                                        <Label text="BOOKING REF" styleClass="portal-section-header"/>
+                                        <Label fx:id="activeBookingRef" text="—" styleClass="portal-booking-ref"/>
+                                    </VBox>
+                                    <VBox spacing="4">
+                                        <Label text="ROOM" styleClass="portal-section-header"/>
+                                        <Label fx:id="activeBookingRoom" text="—" styleClass="portal-booking-detail"/>
+                                    </VBox>
+                                    <VBox spacing="4">
+                                        <Label text="CHECK-IN" styleClass="portal-section-header"/>
+                                        <Label fx:id="activeBookingCheckIn" text="—" styleClass="portal-booking-detail"/>
+                                    </VBox>
+                                    <VBox spacing="4">
+                                        <Label text="CHECK-OUT" styleClass="portal-section-header"/>
+                                        <Label fx:id="activeBookingCheckOut" text="—" styleClass="portal-booking-detail"/>
+                                    </VBox>
+                                    <VBox spacing="4">
+                                        <Label text="TOTAL" styleClass="portal-section-header"/>
+                                        <Label fx:id="activeBookingTotal" text="—" styleClass="portal-price-summary"/>
+                                    </VBox>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Quick Action Grid -->
+                        <Label text="GUEST SERVICES" styleClass="portal-section-header"/>
+                        <FlowPane hgap="14" vgap="14" prefWrapLength="900">
+                            <Button onAction="#goToBookRoom" styleClass="portal-action-btn"
+                                    text="🛏&#10;&#10;BOOK A ROOM"/>
+                            <Button onAction="#goToMyBookings" styleClass="portal-action-btn"
+                                    text="📋&#10;&#10;MY BOOKINGS"/>
+                            <Button onAction="#goToFoodMenu" styleClass="portal-action-btn"
+                                    text="🍽&#10;&#10;FOOD ORDER"/>
+                            <Button onAction="#goToServices" styleClass="portal-action-btn"
+                                    text="🛎&#10;&#10;SERVICES"/>
+                            <Button onAction="#placeCall" styleClass="portal-call-btn"
+                                    text="📞&#10;&#10;CALL RECEPTION"/>
+                            <Button onAction="#goToMyOrders" styleClass="portal-action-btn"
+                                    text="📦&#10;&#10;MY ORDERS"/>
+                        </FlowPane>
+
+                        <!-- Active Orders Summary -->
+                        <Label text="RECENT ACTIVITY" styleClass="portal-section-header"/>
+                        <VBox fx:id="recentActivityBox" spacing="6">
+                            <Label text="No recent activity." styleClass="portal-hint-text"/>
+                        </VBox>
+
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+            <!-- ═══ TAB 2: MY BOOKINGS ═══════════════════════════ -->
+            <Tab text="📋 Bookings">
+                <VBox spacing="12" styleClass="portal-tab-content">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Button text="← Back" styleClass="portal-secondary-btn" onAction="#goToHome"/>
+                        <Label text="MY RESERVATIONS" styleClass="portal-section-header"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="↻ Refresh" styleClass="portal-secondary-btn" onAction="#refreshBookings"/>
+                    </HBox>
+                    <TableView fx:id="bookingTable" VBox.vgrow="ALWAYS" styleClass="portal-table">
+                        <columns>
+                            <TableColumn fx:id="colRef"      text="BOOKING REF"  prefWidth="140" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="colRoom"     text="ROOM"          prefWidth="160" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="colCheckIn"  text="CHECK-IN"      prefWidth="115" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="colCheckOut" text="CHECK-OUT"     prefWidth="115" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="colStatus"   text="STATUS"        prefWidth="110" style="-fx-text-fill: black;"/>
+                            <TableColumn fx:id="colTotal"    text="AMOUNT"        prefWidth="120" style="-fx-text-fill: black;"/>
+                        </columns>
+                        <placeholder><Label text="No bookings yet." styleClass="portal-placeholder-label"/></placeholder>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- ═══ TAB 3: BOOK A ROOM ═══════════════════════════ -->
+            <Tab text="🛏 Book Room">
+                <VBox spacing="14" styleClass="portal-tab-content">
+                    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Button text="← Back" styleClass="portal-secondary-btn" onAction="#goToHome"/>
+                        <Label text="BROWSE &amp; RESERVE" styleClass="portal-section-header"/>
+                    </HBox>
+
+                    <HBox spacing="12" alignment="CENTER_LEFT" styleClass="portal-search-bar">
+                        <padding><Insets top="12" right="16" bottom="12" left="16"/></padding>
+                        <Label text="Check-In" styleClass="portal-field-label"/>
+                        <DatePicker fx:id="checkInPicker" styleClass="portal-date-picker"/>
+                        <Label text="Check-Out" styleClass="portal-field-label"/>
+                        <DatePicker fx:id="checkOutPicker" styleClass="portal-date-picker"/>
+                        <Button text="Search Rooms" styleClass="portal-primary-btn"
+                                onAction="#searchAvailableRooms"/>
+                    </HBox>
+
+                    <SplitPane dividerPositions="0.64" VBox.vgrow="ALWAYS">
+                        <VBox spacing="8">
+                            <Label text="AVAILABLE ROOMS — click to select" styleClass="portal-hint-text"/>
+                            <TableView fx:id="roomTable" VBox.vgrow="ALWAYS" styleClass="portal-table">
+                                <columns>
+                                    <TableColumn fx:id="colRoomNo"    text="ROOM"     prefWidth="70" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colCategory"  text="TYPE"     prefWidth="100" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colBedType"   text="BED"      prefWidth="80" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colCapacity"  text="GUESTS"   prefWidth="70" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colPrice"     text="RATE"     prefWidth="100" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colAmenities" text="AMENITIES" prefWidth="110" style="-fx-text-fill: black;"/>
+                                </columns>
+                                <placeholder><Label text="Select dates and search." styleClass="portal-placeholder-label"/></placeholder>
+                            </TableView>
+                        </VBox>
+                        <VBox spacing="12" styleClass="portal-booking-form">
+                            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                            <Label text="RESERVATION DETAILS" styleClass="portal-section-header"/>
+                            <Label fx:id="roomSelectedLabel" text="Click a room to select"
+                                   styleClass="portal-selected-label" wrapText="true"/>
+                            <Label fx:id="bookingSummaryLabel" styleClass="portal-price-summary" wrapText="true"/>
+                            <Label text="Guests:" styleClass="portal-field-label"/>
+                            <Spinner fx:id="guestSpinner" styleClass="portal-spinner"/>
+                            <Label text="Special Requests:" styleClass="portal-field-label"/>
+                            <TextArea fx:id="specialRequestArea" promptText="Any special requirements?"
+                                      prefRowCount="3" styleClass="portal-text-area"/>
+                            <Region VBox.vgrow="ALWAYS"/>
+                            <Button fx:id="confirmBookingBtn" text="✦ CONFIRM RESERVATION"
+                                    maxWidth="Infinity" styleClass="portal-primary-btn"
+                                    disable="true" onAction="#confirmBooking"/>
+                        </VBox>
+                    </SplitPane>
+                </VBox>
+            </Tab>
+
+            <!-- ═══ TAB 4: FOOD &amp; DINING ═════════════════════ -->
+            <Tab text="🍽 Dining">
+                <VBox spacing="0">
+                    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="portal-tab-content">
+                        <padding><Insets top="16" right="16" bottom="0" left="16"/></padding>
+                        <Button text="← Back" styleClass="portal-secondary-btn" onAction="#goToHome"/>
+                    </HBox>
+                    <TabPane fx:id="foodTabPane" tabClosingPolicy="UNAVAILABLE"
+                             styleClass="portal-inner-tabs" VBox.vgrow="ALWAYS">
+
+                        <!-- Menu tab -->
+                        <Tab text="📜 Menu">
+                            <SplitPane dividerPositions="0.66">
+                                <ScrollPane fitToWidth="true" styleClass="portal-scroll">
+                                    <VBox fx:id="menuVBox" spacing="4">
+                                        <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>
+                                    </VBox>
+                                </ScrollPane>
+                            <VBox spacing="10" styleClass="portal-cart-panel">
+                                <padding><Insets top="16" right="14" bottom="16" left="14"/></padding>
+                                <Label text="🛒 YOUR ORDER" styleClass="portal-section-header"/>
+                                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="portal-scroll">
+                                    <VBox fx:id="cartVBox" spacing="6">
+                                        <padding><Insets top="4"/></padding>
+                                        <Label text="Cart is empty" styleClass="cart-empty-label"/>
+                                    </VBox>
+                                </ScrollPane>
+                                <Separator/>
+                                <Label fx:id="cartTotalLabel" text="TOTAL: $0.00" styleClass="portal-price-summary"/>
+                                <Label text="Special instructions:" styleClass="portal-field-label"/>
+                                <TextField fx:id="foodNotesField" promptText="Allergies, preferences..."
+                                           styleClass="portal-text-field"/>
+                                <HBox spacing="8">
+                                    <Button text="🗑 Clear" styleClass="portal-danger-btn"
+                                            onAction="#clearCart" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                    <Button fx:id="placeOrderBtn" text="✦ PLACE ORDER"
+                                            styleClass="portal-primary-btn" disable="true"
+                                            onAction="#placeOrder" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                                </HBox>
+                            </VBox>
+                        </SplitPane>
+                    </Tab>
+
+                    <!-- My Orders -->
+                    <Tab text="📦 My Orders">
+                        <VBox spacing="10">
+                            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="ORDER HISTORY" styleClass="portal-section-header"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="↻ Refresh" styleClass="portal-secondary-btn" onAction="#refreshOrderHistory"/>
+                            </HBox>
+                            <Label text="Click an order to track its delivery below." styleClass="portal-hint-text"/>
+                            <TableView fx:id="orderHistoryTable" prefHeight="260" styleClass="portal-table">
+                                <columns>
+                                    <TableColumn fx:id="colOrderId"     text="ORDER #"   prefWidth="80" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colOrderStatus" text="STATUS"    prefWidth="170" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colOrderTotal"  text="TOTAL"     prefWidth="100" style="-fx-text-fill: black;"/>
+                                    <TableColumn fx:id="colOrderTime"   text="PLACED"    prefWidth="140" style="-fx-text-fill: black;"/>
+                                </columns>
+                                <placeholder><Label text="No orders yet." styleClass="portal-placeholder-label"/></placeholder>
+                            </TableView>
+                        </VBox>
+                    </Tab>
+
+                    <!-- Track Order -->
+                    <Tab text="🚚 Track">
+                        <VBox spacing="20" alignment="TOP_CENTER">
+                            <padding><Insets top="30" right="40" bottom="30" left="40"/></padding>
+                            <Label text="LIVE ORDER TRACKING" styleClass="portal-section-header"/>
+                            <Label text="Select an order from 'My Orders' to track it here." styleClass="portal-hint-text"/>
+                            <VBox fx:id="orderTrackingBox" spacing="20" alignment="CENTER"
+                                  styleClass="portal-tracking-box" visible="false">
+                                <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+                                <Label fx:id="deliveryStatusLabel" styleClass="portal-tracking-status"
+                                       text="Waiting..." wrapText="true"/>
+                                <ProgressBar fx:id="deliveryProgressBar" progress="0"
+                                             maxWidth="Infinity" styleClass="portal-delivery-bar"/>
+                                <HBox spacing="0" alignment="CENTER">
+                                    <VBox alignment="CENTER" spacing="4" prefWidth="130">
+                                        <Label text="📥" style="-fx-font-size:28;"/>
+                                        <Label text="Received" styleClass="portal-milestone-label"/>
+                                    </VBox>
+                                    <VBox alignment="CENTER" spacing="4" prefWidth="130">
+                                        <Label text="👨‍🍳" style="-fx-font-size:28;"/>
+                                        <Label text="Preparing" styleClass="portal-milestone-label"/>
+                                    </VBox>
+                                    <VBox alignment="CENTER" spacing="4" prefWidth="130">
+                                        <Label text="🚚" style="-fx-font-size:28;"/>
+                                        <Label text="On the Way" styleClass="portal-milestone-label"/>
+                                    </VBox>
+                                    <VBox alignment="CENTER" spacing="4" prefWidth="130">
+                                        <Label text="✅" style="-fx-font-size:28;"/>
+                                        <Label text="Delivered" styleClass="portal-milestone-label"/>
+                                    </VBox>
+                                </HBox>
+                                <Label text="Auto-refreshes every 8 seconds." styleClass="portal-hint-text"/>
+                            </VBox>
+                        </VBox>
+                    </Tab>
+                    </TabPane>
+                </VBox>
+            </Tab>
+
+            <!-- ═══ TAB 5: SERVICES ══════════════════════════════ -->
+            <Tab text="🛎 Services">
+                <VBox spacing="0">
+                    <HBox alignment="CENTER_LEFT" spacing="10" styleClass="portal-tab-content">
+                        <padding><Insets top="16" right="16" bottom="0" left="16"/></padding>
+                        <Button text="← Back" styleClass="portal-secondary-btn" onAction="#goToHome"/>
+                    </HBox>
+                    <SplitPane dividerPositions="0.45" styleClass="portal-tab-content">
+                        <VBox spacing="12">
+                            <padding><Insets top="16" right="12" bottom="16" left="16"/></padding>
+                            <Label text="REQUEST A SERVICE" styleClass="portal-section-header"/>
+                        <Label text="Select a service below:" styleClass="portal-field-label"/>
+                        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="portal-scroll">
+                            <FlowPane fx:id="serviceCardsPane" hgap="10" vgap="10" prefWrapLength="400"/>
+                        </ScrollPane>
+                        <Separator/>
+                        <Label text="Additional Details:" styleClass="portal-field-label"/>
+                        <TextArea fx:id="serviceDescArea" promptText="Describe your request..."
+                                  prefRowCount="3" styleClass="portal-text-area"/>
+                        <VBox fx:id="phoneCallBox" spacing="8" styleClass="portal-phone-box" visible="false" managed="false">
+                            <padding><Insets top="8" right="12" bottom="8" left="12"/></padding>
+                            <Label text="📞 Number to call:" styleClass="portal-field-label"/>
+                            <TextField fx:id="phoneCallField" promptText="+1 702 XXX XXXX"
+                                       styleClass="portal-text-field"/>
+                        </VBox>
+                        <Button text="✦ SUBMIT REQUEST" maxWidth="Infinity"
+                                styleClass="portal-primary-btn" onAction="#submitServiceRequest"/>
+                    </VBox>
+                    <VBox spacing="10">
+                        <padding><Insets top="16" right="16" bottom="16" left="12"/></padding>
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="MY REQUESTS" styleClass="portal-section-header"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button text="↻" styleClass="portal-secondary-btn" onAction="#refreshServices"/>
+                        </HBox>
+                        <TableView fx:id="serviceTable" VBox.vgrow="ALWAYS" styleClass="portal-table">
+                            <columns>
+                                <TableColumn fx:id="colSvcType"   text="TYPE"    prefWidth="150" style="-fx-text-fill: black;"/>
+                                <TableColumn fx:id="colSvcStatus" text="STATUS"  prefWidth="100" style="-fx-text-fill: black;"/>
+                                <TableColumn fx:id="colSvcDate"   text="TIME"    prefWidth="120" style="-fx-text-fill: black;"/>
+                                <TableColumn fx:id="colSvcDesc"   text="DETAILS" prefWidth="200" style="-fx-text-fill: black;"/>
+                            </columns>
+                            <placeholder><Label text="No requests yet." styleClass="portal-placeholder-label"/></placeholder>
+                        </TableView>
+                        </VBox>
+                    </SplitPane>
+                </VBox>
+            </Tab>
+
+            <!-- ═══ TAB 6: MY ACCOUNT ════════════════════════════ -->
+            <Tab text="👤 Account">
+                <ScrollPane fitToWidth="true" styleClass="portal-scroll">
+                    <VBox spacing="18">
+                        <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                        <VBox spacing="12" styleClass="portal-account-section">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Button text="← Back" styleClass="portal-secondary-btn" onAction="#goToHomeFromProfile"/>
+                                <Label text="PROFILE INFORMATION" styleClass="portal-section-header"/>
+                            </HBox>
+                            <GridPane hgap="14" vgap="10">
+                                <columnConstraints>
+                                    <ColumnConstraints percentWidth="50"/>
+                                    <ColumnConstraints percentWidth="50"/>
+                                </columnConstraints>
+                                <Label text="First Name" styleClass="portal-field-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                <Label text="Last Name"  styleClass="portal-field-label" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                <TextField fx:id="accFirstName" styleClass="portal-text-field" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                <TextField fx:id="accLastName"  styleClass="portal-text-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                <Label text="Email (login)" styleClass="portal-field-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                <Label text="Phone"         styleClass="portal-field-label" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                <TextField fx:id="accEmail" editable="false" styleClass="portal-text-field-disabled" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                                <TextField fx:id="accPhone" styleClass="portal-text-field" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                <Label text="City"    styleClass="portal-field-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                                <Label text="Country" styleClass="portal-field-label" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                <TextField fx:id="accCity"    styleClass="portal-text-field" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                                <TextField fx:id="accCountry" styleClass="portal-text-field" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                            </GridPane>
+                            <Label fx:id="accUpdateMsg" visible="false" wrapText="true" styleClass="portal-hint-text"/>
+                            <Button text="💾 Save Profile" styleClass="portal-primary-btn" onAction="#saveProfile"/>
+                        </VBox>
+
+                        <VBox spacing="12" styleClass="portal-account-section">
+                            <Label text="CHANGE PASSWORD" styleClass="portal-section-header"/>
+                            <Label text="Current Password:" styleClass="portal-field-label"/>
+                            <PasswordField fx:id="accOldPassword" styleClass="portal-text-field" maxWidth="340"/>
+                            <Label text="New Password:" styleClass="portal-field-label"/>
+                            <PasswordField fx:id="accNewPassword" styleClass="portal-text-field" maxWidth="340"/>
+                            <Label text="Confirm New Password:" styleClass="portal-field-label"/>
+                            <PasswordField fx:id="accConfirmPassword" styleClass="portal-text-field" maxWidth="340"/>
+                            <Button text="🔑 Update Password" styleClass="portal-secondary-btn" onAction="#changePassword"/>
+                        </VBox>
+
+                        <VBox spacing="12" styleClass="portal-danger-section">
+                            <Label text="DANGER ZONE" styleClass="portal-section-title-danger"/>
+                            <Label text="Deleting your account removes portal access. Booking history is preserved."
+                                   styleClass="portal-hint-text" wrapText="true"/>
+                            <Button text="🗑 Delete My Account" styleClass="portal-danger-btn" onAction="#deleteAccount"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>

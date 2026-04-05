@@ -57,11 +57,11 @@
 
     <!-- Charts Row 2 -->
     <HBox spacing="10" VBox.vgrow="ALWAYS">
-        <LineChart fx:id="bookingTrendChart" HBox.hgrow="ALWAYS" prefHeight="200"
+        <BarChart fx:id="bookingTrendChart" HBox.hgrow="ALWAYS" prefHeight="200"
                    style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
             <xAxis><CategoryAxis label="Status"/></xAxis>
             <yAxis><NumberAxis label="Count"/></yAxis>
-        </LineChart>
+        </BarChart>
         <BarChart fx:id="topRoomsChart" HBox.hgrow="ALWAYS" prefHeight="200"
                   style="-fx-background-color:white;-fx-background-radius:10;-fx-border-color:#dde3eb;-fx-border-radius:10;">
             <xAxis><CategoryAxis label="Room"/></xAxis>

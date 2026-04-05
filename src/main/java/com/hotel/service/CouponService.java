@@ -47,6 +47,8 @@ public class CouponService {
             DatabaseConnection.rollback();
             logger.error("Error generating coupon: {}", e.getMessage());
             return null;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 
@@ -68,6 +70,8 @@ public class CouponService {
             }
         } catch (SQLException e) {
             logger.error("Error validating coupon: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return 0; // not found
     }
@@ -93,6 +97,8 @@ public class CouponService {
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error applying coupon: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return finalAmount;
     }
@@ -115,6 +121,8 @@ public class CouponService {
             }
         } catch (SQLException e) {
             logger.error("Error fetching coupon: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return "Coupon not found";
     }

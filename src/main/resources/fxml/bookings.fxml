@@ -36,6 +36,14 @@
         <Button fx:id="btnInvoice" text="🗎  Generate Invoice"
                 style="-fx-background-color:#8e44ad;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 22;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
                 onAction="#handleGenerateInvoice" disable="true" minWidth="175"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!-- Portal sync button + new bookings badge -->
+        <Label fx:id="portalNewBadge" text="0 NEW"
+               visible="false"
+               style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-weight:bold;-fx-font-size:11px;-fx-background-radius:12;-fx-padding:4 10;"/>
+        <Button text="🌐  Sync Portal Bookings"
+                style="-fx-background-color:#1565c0;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:9 18;-fx-background-radius:8;-fx-cursor:hand;-fx-font-size:13px;"
+                onAction="#syncPortalBookings" minWidth="180"/>
     </HBox>
 
     <!-- Table -->
@@ -52,6 +60,9 @@
             <TableColumn fx:id="colTotal"    text="Total (₹)"    prefWidth="105" minWidth="105" resizable="false"/>
             <TableColumn fx:id="colBalance"  text="Balance (₹)"  prefWidth="105" minWidth="105" resizable="false"/>
         </columns>
+              <placeholder>
+                     <Label text="No data available." style="-fx-text-fill:#aaa;-fx-font-size:13px;"/>
+              </placeholder>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
@@ -125,6 +136,27 @@
                       GridPane.columnSpan="3" prefRowCount="2"
                       style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
         </GridPane>
+
+        <VBox spacing="8"
+              style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:8;-fx-background-radius:8;-fx-padding:12;">
+            <Label text="🎫  Coupon &amp; Payment Tools"
+                   style="-fx-font-size:13px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <TextField fx:id="couponField" promptText="Enter coupon code…"
+                           style="-fx-background-color:white;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"
+                           prefWidth="180"/>
+                <Button text="🎟  Apply Coupon"
+                        style="-fx-background-color:#8e44ad;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 16;-fx-background-radius:8;-fx-cursor:hand;"
+                        onAction="#handleApplyCoupon"/>
+                <Button text="📱  UPI QR"
+                        style="-fx-background-color:#27ae60;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 16;-fx-background-radius:8;-fx-cursor:hand;"
+                        onAction="#handleShowUPIQR"/>
+            </HBox>
+            <Label fx:id="couponStatusLabel" text="Enter a coupon to see the discount status."
+                   style="-fx-font-size:12px;-fx-text-fill:#566573;" wrapText="true"/>
+            <Label fx:id="discountedTotalLabel" text="Discounted Total: —"
+                   style="-fx-font-size:14px;-fx-font-weight:bold;-fx-text-fill:#1a6fa5;"/>
+        </VBox>
 
         <!-- Charges Summary -->
         <HBox spacing="24"

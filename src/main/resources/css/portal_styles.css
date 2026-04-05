@@ -1,0 +1,664 @@
+/* ================================================================
+   CUSTOMER PORTAL – Las Vegas Luxury Theme
+   Marcelli Living Hotel
+================================================================ */
+
+/* ── Root ──────────────────────────────────────────────────────── */
+.portal-root {
+    -fx-background-color: #0a0a0f;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ── Login Screen ──────────────────────────────────────────────── */
+.portal-login-root {
+    -fx-background-color: linear-gradient(to bottom, #0a0a0f 0%, #1a0a2e 50%, #0a0a0f 100%);
+}
+.portal-login-bg { -fx-background-color: transparent; }
+
+.portal-login-card {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #12122a);
+    -fx-background-radius: 16;
+    -fx-border-color: #ffeb3b;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.4), 40, 0, 0, 0);
+}
+
+.portal-login-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.6), 10, 0, 0, 0);
+}
+
+.portal-login-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #aaa;
+    -fx-alignment: CENTER;
+    -fx-letter-spacing: 3;
+}
+
+/* ── Top Navbar ──────────────────────────────────────────────────*/
+.portal-topbar {
+    -fx-background-color: linear-gradient(to right, #0a0a0f, #1a0a2e, #0a0a0f);
+    -fx-border-color: transparent transparent #ffeb3b transparent;
+    -fx-border-width: 0 0 1.5 0;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.3), 10, 0, 0, 3);
+}
+
+.portal-brand-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.8), 12, 0, 0, 0);
+}
+
+.portal-welcome-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #ddd;
+}
+
+.portal-nav-time {
+    -fx-font-size: 12px;
+    -fx-text-fill: #ffeb3b;
+    -fx-font-family: "Courier New", monospace;
+}
+
+/* ── Profile Button & Dropdown ───────────────────────────────────*/
+.portal-profile-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #ffeb3b;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-min-width: 38px;
+    -fx-min-height: 38px;
+    -fx-max-width: 38px;
+    -fx-max-height: 38px;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.5), 8, 0, 0, 0);
+}
+.portal-profile-btn:hover {
+    -fx-background-color: #ffeb3b;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.9), 16, 0, 0, 0);
+}
+
+/* ── Live Status Chip ───────────────────────────────────────────*/
+.portal-status-chip {
+    -fx-background-color: #0d2a0d;
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-border-color: #4ade80;
+    -fx-border-radius: 20;
+    -fx-border-width: 1;
+}
+
+/* ── Central Dashboard ──────────────────────────────────────────*/
+.portal-dashboard-root {
+    -fx-background-color: linear-gradient(to bottom, #0a0a0f, #0f0f1a);
+}
+
+.portal-section-header {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+    -fx-letter-spacing: 3;
+}
+
+/* Hero action buttons */
+.portal-action-btn {
+    -fx-background-color: linear-gradient(to bottom, #1e1e3a, #12122a);
+    -fx-text-fill: #ffeb3b;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-border-color: #ffeb3b;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 18 16;
+    -fx-cursor: hand;
+    -fx-min-width: 130px;
+    -fx-min-height: 90px;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.2), 8, 0, 0, 2);
+}
+.portal-action-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #2e2e5a, #1e1e3a);
+    -fx-border-color: #fff176;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.7), 20, 0, 0, 0);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+/* Gold call button */
+.portal-call-btn {
+    -fx-background-color: linear-gradient(to bottom, #fdd835, #fbc02d);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-border-color: #ffeb3b;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-padding: 18 16;
+    -fx-cursor: hand;
+    -fx-min-width: 130px;
+    -fx-min-height: 90px;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.5), 12, 0, 0, 2);
+}
+.portal-call-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #fff176, #fdd835);
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.9), 24, 0, 0, 0);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+}
+
+/* ── Booking Card / Active Booking ──────────────────────────────*/
+.portal-booking-card {
+    -fx-background-color: linear-gradient(to right, #1a0a2e, #12122a);
+    -fx-background-radius: 12;
+    -fx-border-color: #ffeb3b;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.3), 16, 0, 0, 4);
+}
+
+.portal-booking-ref {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+}
+
+.portal-booking-detail {
+    -fx-font-size: 12px;
+    -fx-text-fill: #ccc;
+}
+
+.portal-status-confirmed {
+    -fx-background-color: #0d2a1a;
+    -fx-text-fill: #4ade80;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-background-radius: 20;
+    -fx-padding: 4 12;
+    -fx-border-color: #4ade80;
+    -fx-border-radius: 20;
+}
+
+.portal-status-checkedin {
+    -fx-background-color: #1a1a0d;
+    -fx-text-fill: #ffeb3b;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-background-radius: 20;
+    -fx-padding: 4 12;
+    -fx-border-color: #ffeb3b;
+    -fx-border-radius: 20;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────*/
+.portal-table {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 10;
+}
+.portal-table .column-header-background {
+    -fx-background-color: linear-gradient(to right, #f8fafc, #e5e7eb);
+}
+.portal-table .column-header .label {
+    -fx-text-fill: #111827;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-background-color: transparent;
+}
+.portal-table .table-row-cell .text {
+    -fx-fill: #111827 !important;
+}
+.portal-table .table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #111827;
+}
+.portal-table .table-row-cell:odd {
+    -fx-background-color: #f9fafb;
+    -fx-text-fill: #111827;
+}
+.portal-table .table-row-cell:selected {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #111827;
+}
+.portal-table .table-row-cell:hover {
+    -fx-background-color: #eef2ff;
+    -fx-cursor: hand;
+}
+.portal-table .table-cell .label {
+    -fx-text-fill: #111827;
+    -fx-text-background-color: #111827;
+    -fx-font-size: 12px;
+}
+
+/* ── Form Fields ─────────────────────────────────────────────────*/
+.portal-text-field {
+    -fx-background-color: #0f0f22;
+    -fx-border-color: #3a3a5a;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 9 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #666;
+}
+.portal-text-field:focused {
+    -fx-border-color: #ffeb3b;
+    -fx-background-color: #12122a;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.3), 8, 0, 0, 0);
+}
+
+.portal-text-field-disabled {
+    -fx-background-color: #0a0a18;
+    -fx-border-color: #2a2a3a;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 9 12;
+    -fx-font-size: 13px;
+    -fx-text-fill: #666;
+}
+
+.portal-text-area {
+    -fx-background-color: #0f0f22;
+    -fx-border-color: #3a3a5a;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #666;
+}
+.portal-text-area:focused {
+    -fx-border-color: #ffeb3b;
+}
+
+.portal-combo { -fx-background-color: #0f0f22; -fx-border-color: #3a3a5a; -fx-border-radius: 8; -fx-background-radius: 8; }
+.portal-combo .list-cell { -fx-background-color: #12122a; -fx-text-fill: #eee; }
+.portal-combo-box-popup .list-view { -fx-background-color: #12122a; -fx-border-color: #ffeb3b; }
+.portal-combo-box-popup .list-cell { -fx-background-color: #12122a; -fx-text-fill: #eee; }
+.portal-combo-box-popup .list-cell:hover { -fx-background-color: #2e1a4a; }
+
+.portal-date-picker .text-field { -fx-background-color: #0f0f22; -fx-text-fill: white; -fx-border-color: #3a3a5a; }
+
+/* ── Buttons ─────────────────────────────────────────────────────*/
+.portal-primary-btn {
+    -fx-background-color: linear-gradient(to bottom, #ffeb3b, #fbc02d);
+    -fx-text-fill: #0a0a0f;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 22;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.4), 8, 0, 0, 2);
+}
+.portal-primary-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #fff176, #ffeb3b);
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.8), 16, 0, 0, 0);
+}
+.portal-primary-btn:disabled {
+    -fx-background-color: #333;
+    -fx-text-fill: #666;
+    -fx-effect: none;
+}
+
+.portal-secondary-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffeb3b;
+    -fx-font-size: 12px;
+    -fx-border-color: #ffeb3b;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+.portal-secondary-btn:hover {
+    -fx-background-color: rgba(255,235,59,0.1);
+}
+
+.portal-danger-btn {
+    -fx-background-color: #3a0a0a;
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #ff6b6b;
+    -fx-border-radius: 8;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+.portal-danger-btn:hover {
+    -fx-background-color: #ff6b6b;
+    -fx-text-fill: white;
+}
+
+.portal-logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 12px;
+    -fx-border-color: #ff6b6b;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+}
+.portal-logout-btn:hover {
+    -fx-background-color: #ff6b6b;
+    -fx-text-fill: white;
+}
+
+/* ── Labels ──────────────────────────────────────────────────────*/
+.portal-section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+}
+.portal-section-title-danger {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff6b6b;
+}
+.portal-field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #aaa;
+}
+.portal-hint-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666;
+}
+.portal-error-label {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 12px;
+}
+.portal-link {
+    -fx-text-fill: #ffeb3b;
+    -fx-font-weight: bold;
+}
+.portal-selected-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+    -fx-background-color: rgba(255,235,59,0.1);
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-border-color: rgba(255,235,59,0.3);
+    -fx-border-radius: 6;
+}
+.portal-price-summary {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4ade80;
+}
+.portal-placeholder-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #444;
+}
+
+/* ── Tab Pane (inner navigation) ─────────────────────────────────*/
+.portal-tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #0a0a0f;
+}
+.portal-tab-pane .tab {
+    -fx-background-color: #12122a;
+    -fx-text-base-color: #888;
+    -fx-font-size: 13px;
+    -fx-padding: 8 18;
+    -fx-cursor: hand;
+}
+.portal-tab-pane .tab:selected {
+    -fx-background-color: #1a0a2e;
+    -fx-border-color: transparent transparent #ffeb3b transparent;
+    -fx-border-width: 0 0 2 0;
+}
+.portal-tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #ffeb3b;
+    -fx-font-weight: bold;
+}
+.portal-tab-pane > .tab-header-area {
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+    -fx-min-height: 0;
+    -fx-padding: 0;
+    visibility: hidden;
+}
+.portal-tab-pane .tab-content-area {
+    -fx-background-color: #0a0a0f;
+}
+.portal-inner-tabs .tab-header-area .tab-header-background {
+    -fx-background-color: #0f0f1a;
+}
+.portal-inner-tabs .tab {
+    -fx-background-color: transparent;
+    -fx-font-size: 12px;
+}
+.portal-inner-tabs .tab:selected {
+    -fx-border-color: transparent transparent #ffeb3b transparent;
+    -fx-border-width: 0 0 2 0;
+}
+.portal-inner-tabs .tab:selected .tab-label {
+    -fx-text-fill: #ffeb3b;
+    -fx-font-weight: bold;
+}
+.portal-tab-content { -fx-background-color: #0a0a0f; }
+
+/* ── Menu Card (food) ────────────────────────────────────────────*/
+.menu-row {
+    -fx-background-color: #12122a;
+    -fx-background-radius: 8;
+    -fx-border-color: #2a2a4a;
+    -fx-border-radius: 8;
+    -fx-padding: 10 14;
+}
+.menu-row:hover {
+    -fx-background-color: #1a1a35;
+    -fx-border-color: #ffeb3b;
+}
+.menu-category-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+    -fx-background-color: rgba(255,235,59,0.08);
+    -fx-background-radius: 6;
+    -fx-padding: 8 14;
+    -fx-border-color: rgba(255,235,59,0.2);
+    -fx-border-radius: 6;
+}
+.menu-item-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #eee;
+}
+.menu-item-desc {
+    -fx-font-size: 11px;
+    -fx-text-fill: #777;
+}
+.menu-item-price {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4ade80;
+    -fx-min-width: 60px;
+    -fx-alignment: CENTER_RIGHT;
+}
+.qty-btn {
+    -fx-background-color: #1a0a2e;
+    -fx-text-fill: #ffeb3b;
+    -fx-font-weight: bold;
+    -fx-background-radius: 50%;
+    -fx-border-color: #ffeb3b;
+    -fx-border-radius: 50%;
+    -fx-border-width: 1;
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+.qty-btn:hover {
+    -fx-background-color: #ffeb3b;
+    -fx-text-fill: #0a0a0f;
+}
+.qty-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-min-width: 28px;
+    -fx-alignment: CENTER;
+}
+
+/* ── Cart ────────────────────────────────────────────────────────*/
+.portal-cart-panel {
+    -fx-background-color: #0f0f1a;
+    -fx-border-color: #2a2a4a;
+    -fx-border-width: 0 0 0 1;
+}
+.cart-empty-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #444;
+    -fx-padding: 20;
+}
+.cart-price {
+    -fx-font-weight: bold;
+    -fx-text-fill: #4ade80;
+}
+.cart-item-name { -fx-text-fill: #ddd; -fx-font-size: 12px; }
+
+/* ── Order Tracking ──────────────────────────────────────────────*/
+.portal-tracking-box {
+    -fx-background-color: #12122a;
+    -fx-background-radius: 14;
+    -fx-border-color: #ffeb3b;
+    -fx-border-radius: 14;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.3), 20, 0, 0, 0);
+    -fx-max-width: 680;
+}
+.portal-tracking-status {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.5), 8, 0, 0, 0);
+}
+.portal-delivery-bar {
+    -fx-accent: #ffeb3b;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-pref-height: 20;
+}
+.portal-milestone-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #888;
+    -fx-alignment: CENTER;
+}
+
+/* ── Account Sections ────────────────────────────────────────────*/
+.portal-account-section {
+    -fx-background-color: #12122a;
+    -fx-background-radius: 10;
+    -fx-border-color: #2a2a4a;
+    -fx-border-radius: 10;
+    -fx-padding: 18;
+}
+.portal-danger-section {
+    -fx-background-color: #1a0a0a;
+    -fx-background-radius: 10;
+    -fx-border-color: #4a1a1a;
+    -fx-border-radius: 10;
+    -fx-padding: 18;
+}
+
+/* ── Search bar ──────────────────────────────────────────────────*/
+.portal-search-bar {
+    -fx-background-color: #12122a;
+    -fx-background-radius: 10;
+    -fx-border-color: #2a2a4a;
+    -fx-border-radius: 10;
+}
+
+/* ── Booking form ────────────────────────────────────────────────*/
+.portal-booking-form {
+    -fx-background-color: #0f0f1a;
+    -fx-border-color: #2a2a4a;
+}
+
+/* ── Phone call box ──────────────────────────────────────────────*/
+.portal-phone-box {
+    -fx-background-color: rgba(255,235,59,0.05);
+    -fx-background-radius: 8;
+    -fx-border-color: #ffeb3b;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+/* ── Scroll pane ─────────────────────────────────────────────────*/
+.portal-scroll { -fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent; }
+.portal-scroll > .viewport { -fx-background-color: transparent; }
+.portal-scroll > .scroll-bar { -fx-background-color: #12122a; }
+.portal-scroll > .scroll-bar .thumb { -fx-background-color: #ffeb3b; -fx-background-radius: 4; }
+
+/* ── Separator ───────────────────────────────────────────────────*/
+.separator .line { -fx-border-color: #2a2a4a; -fx-border-width: 0.5; }
+
+/* ── Spinner ─────────────────────────────────────────────────────*/
+.portal-spinner .text-field { -fx-background-color: #0f0f22; -fx-text-fill: white; }
+.portal-spinner .increment-arrow-button, .portal-spinner .decrement-arrow-button {
+    -fx-background-color: #1a0a2e;
+}
+
+/* ── Hyperlink ───────────────────────────────────────────────────*/
+.hyperlink { -fx-text-fill: #ffeb3b; -fx-border-color: transparent; }
+.hyperlink:hover { -fx-text-fill: #fff176; -fx-underline: true; }
+
+/* ── Call ringing animation ──────────────────────────────────────*/
+.call-ringing-box {
+    -fx-background-color: linear-gradient(to bottom, #1a0a2e, #0a0a1e);
+    -fx-background-radius: 14;
+    -fx-border-color: #ffeb3b;
+    -fx-border-radius: 14;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.6), 30, 0, 0, 0);
+}
+.call-status-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffeb3b;
+}
+.call-answered-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4ade80;
+}
+
+/* ── Service card ────────────────────────────────────────────────*/
+.service-card {
+    -fx-background-color: #12122a;
+    -fx-background-radius: 10;
+    -fx-border-color: #2a2a4a;
+    -fx-border-radius: 10;
+    -fx-padding: 14;
+    -fx-cursor: hand;
+}
+.service-card:hover {
+    -fx-background-color: #1a1a35;
+    -fx-border-color: #ffeb3b;
+    -fx-effect: dropshadow(gaussian, rgba(255,235,59,0.3), 12, 0, 0, 0);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+.service-icon { -fx-font-size: 28px; }
+.service-name { -fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #eee; -fx-alignment: CENTER; -fx-wrap-text: true; }
+
+/* ── ProgressIndicator ───────────────────────────────────────────*/
+.progress-indicator { -fx-progress-color: #ffeb3b; }

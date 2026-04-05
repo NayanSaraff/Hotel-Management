@@ -33,22 +33,26 @@ public class ReportService {
     /** Monthly revenue for the past N months as a LinkedHashMap<Month, Amount>. */
     public Map<String, Double> getMonthlyRevenue(int months) {
         Map<String, Double> data = new LinkedHashMap<>();
-        String sql = "SELECT TO_CHAR(BOOKING_DATE,'Mon-YYYY') AS MONTH, " +
-                     "SUM(TOTAL_AMOUNT) AS REVENUE " +
-                     "FROM BOOKINGS " +
-                     "WHERE STATUS IN ('CHECKED_OUT','CHECKED_IN') " +
-                     "AND BOOKING_DATE >= ADD_MONTHS(SYSDATE, ?) " +
-                     "GROUP BY TO_CHAR(BOOKING_DATE,'Mon-YYYY'), TRUNC(BOOKING_DATE,'MM') " +
-                     "ORDER BY TRUNC(BOOKING_DATE,'MM')";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setInt(1, -months);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    data.put(rs.getString("MONTH"), rs.getDouble("REVENUE"));
+        String sql = "SELECT TO_CHAR(PAYMENT_DATE,'Mon-YYYY') AS MONTH, " +
+                     "SUM(AMOUNT) AS REVENUE " +
+                     "FROM PAYMENTS " +
+                     "WHERE PAYMENT_TYPE <> 'REFUND' " +
+                     "AND PAYMENT_DATE >= TRUNC(ADD_MONTHS(TRUNC(SYSDATE,'MM'), ?), 'MM') " +
+                     "GROUP BY TO_CHAR(PAYMENT_DATE,'Mon-YYYY'), TRUNC(PAYMENT_DATE,'MM') " +
+                     "ORDER BY TRUNC(PAYMENT_DATE,'MM')";
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+                ps.setInt(1, -(months - 1));
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        data.put(rs.getString("MONTH"), rs.getDouble("REVENUE"));
+                    }
                 }
             }
         } catch (SQLException e) {
             logger.error("Error fetching monthly revenue: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return data;
     }
@@ -60,13 +64,17 @@ public class ReportService {
                      "FROM BOOKINGS b JOIN ROOMS r ON b.ROOM_ID=r.ROOM_ID " +
                      "WHERE b.STATUS IN ('CHECKED_OUT','CHECKED_IN') " +
                      "GROUP BY r.CATEGORY ORDER BY REVENUE DESC";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                data.put(rs.getString("CATEGORY"), rs.getDouble("REVENUE"));
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    data.put(rs.getString("CATEGORY"), rs.getDouble("REVENUE"));
+                }
             }
         } catch (SQLException e) {
             logger.error("Error fetching revenue by category: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return data;
     }
@@ -107,13 +115,17 @@ public class ReportService {
     public Map<String, Integer> getBookingsByStatus() {
         Map<String, Integer> data = new LinkedHashMap<>();
         String sql = "SELECT STATUS, COUNT(*) AS CNT FROM BOOKINGS GROUP BY STATUS";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                data.put(rs.getString("STATUS"), rs.getInt("CNT"));
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    data.put(rs.getString("STATUS"), rs.getInt("CNT"));
+                }
             }
         } catch (SQLException e) {
             logger.error("Error fetching bookings by status: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return data;
     }
@@ -121,16 +133,23 @@ public class ReportService {
     /** Top 5 most-booked rooms. */
     public Map<String, Integer> getTopBookedRooms() {
         Map<String, Integer> data = new LinkedHashMap<>();
-        String sql = "SELECT r.ROOM_NUMBER, COUNT(b.BOOKING_ID) AS BOOKINGS " +
-                     "FROM ROOMS r JOIN BOOKINGS b ON r.ROOM_ID=b.ROOM_ID " +
-                     "GROUP BY r.ROOM_NUMBER ORDER BY BOOKINGS DESC FETCH FIRST 5 ROWS ONLY";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                data.put(rs.getString("ROOM_NUMBER"), rs.getInt("BOOKINGS"));
+        String sql = "SELECT * FROM ( " +
+                     "  SELECT r.ROOM_NUMBER, COUNT(b.BOOKING_ID) AS BOOKINGS " +
+                     "  FROM ROOMS r JOIN BOOKINGS b ON r.ROOM_ID=b.ROOM_ID " +
+                     "  GROUP BY r.ROOM_NUMBER " +
+                     "  ORDER BY BOOKINGS DESC " +
+                     ") WHERE ROWNUM <= 5";
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    data.put(rs.getString("ROOM_NUMBER"), rs.getInt("BOOKINGS"));
+                }
             }
         } catch (SQLException e) {
             logger.error("Error fetching top booked rooms: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return data;
     }
@@ -140,33 +159,45 @@ public class ReportService {
     public double getTodayRevenue() {
         String sql = "SELECT NVL(SUM(p.AMOUNT),0) FROM PAYMENTS p " +
                      "WHERE TRUNC(p.PAYMENT_DATE) = TRUNC(SYSDATE) AND p.PAYMENT_TYPE != 'REFUND'";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) return rs.getDouble(1);
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                if (rs.next()) return rs.getDouble(1);
+            }
         } catch (SQLException e) {
             logger.error("Error fetching today revenue: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return 0;
     }
 
     public int getTodayCheckIns() {
         String sql = "SELECT COUNT(*) FROM BOOKINGS WHERE TRUNC(ACTUAL_CHECK_IN)=TRUNC(SYSDATE)";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) return rs.getInt(1);
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                if (rs.next()) return rs.getInt(1);
+            }
         } catch (SQLException e) {
             logger.error("Error fetching today check-ins: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return 0;
     }
 
     public int getTodayCheckOuts() {
         String sql = "SELECT COUNT(*) FROM BOOKINGS WHERE TRUNC(ACTUAL_CHECK_OUT)=TRUNC(SYSDATE)";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            if (rs.next()) return rs.getInt(1);
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                if (rs.next()) return rs.getInt(1);
+            }
         } catch (SQLException e) {
             logger.error("Error fetching today check-outs: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return 0;
     }

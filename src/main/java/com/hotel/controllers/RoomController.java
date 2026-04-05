@@ -197,12 +197,50 @@ public class RoomController {
 
     @FXML
     private void handleDelete() {
-        if (selectedRoom == null)
+        if (selectedRoom == null) {
+            AlertUtil.showWarning("Delete Room", "Please select a room to delete.");
             return;
+        }
         if (AlertUtil.showConfirm("Delete Room", "Delete room " + selectedRoom.getRoomNumber() + "?")) {
-            roomService.deleteRoom(selectedRoom.getRoomId());
-            loadRooms();
-            showForm(false);
+            boolean deleted = deleteRoomCascade(selectedRoom.getRoomId());
+            if (deleted) {
+                AlertUtil.showInfo("Deleted", "Room deleted successfully.");
+                selectedRoom = null;
+                deleteButton.setDisable(true);
+                loadRooms();
+                showForm(false);
+            } else {
+                AlertUtil.showError("Delete Failed", "Could not delete this room. It may be linked to bookings or other records.");
+            }
+        }
+    }
+
+    private boolean deleteRoomCascade(int roomId) {
+        String[] statements = new String[] {
+                "DELETE FROM FOOD_ORDER_ITEMS WHERE ORDER_ID IN (SELECT ORDER_ID FROM FOOD_ORDERS WHERE BOOKING_ID IN (SELECT BOOKING_ID FROM BOOKINGS WHERE ROOM_ID = ?))",
+                "DELETE FROM FOOD_ORDERS WHERE BOOKING_ID IN (SELECT BOOKING_ID FROM BOOKINGS WHERE ROOM_ID = ?)",
+                "DELETE FROM SERVICE_REQUESTS WHERE BOOKING_ID IN (SELECT BOOKING_ID FROM BOOKINGS WHERE ROOM_ID = ?)",
+                "DELETE FROM PAYMENTS WHERE BOOKING_ID IN (SELECT BOOKING_ID FROM BOOKINGS WHERE ROOM_ID = ?)",
+                "DELETE FROM BOOKINGS WHERE ROOM_ID = ?",
+                "DELETE FROM HOUSEKEEPING_LOG WHERE ROOM_ID = ?",
+                "DELETE FROM ROOMS WHERE ROOM_ID = ?"
+        };
+
+        try {
+            for (String sql : statements) {
+                try (java.sql.PreparedStatement ps = com.hotel.util.DatabaseConnection.getConnection().prepareStatement(sql)) {
+                    ps.setInt(1, roomId);
+                    ps.executeUpdate();
+                }
+            }
+            com.hotel.util.DatabaseConnection.commit();
+            return true;
+        } catch (java.sql.SQLException e) {
+            com.hotel.util.DatabaseConnection.rollback();
+            AlertUtil.showError("Delete Failed", "Could not delete room: " + e.getMessage());
+            return false;
+        } finally {
+            com.hotel.util.DatabaseConnection.closeConnection();
         }
     }
 

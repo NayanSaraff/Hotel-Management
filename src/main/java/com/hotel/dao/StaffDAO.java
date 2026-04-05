@@ -22,7 +22,8 @@ public class StaffDAO implements GenericDAO<Staff, Integer> {
         String sql = "INSERT INTO STAFF (EMPLOYEE_ID,FIRST_NAME,LAST_NAME,DEPARTMENT," +
                      "DESIGNATION,SALARY,PHONE,EMAIL,JOINING_DATE,ACTIVE,ADDRESS,EMERGENCY_CONTACT) " +
                      "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-        try (PreparedStatement ps = DatabaseConnection.getConnection()
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection()
                 .prepareStatement(sql, new String[]{"STAFF_ID"})) {
             ps.setString(1, s.getEmployeeId());
             ps.setString(2, s.getFirstName());
@@ -41,9 +42,12 @@ public class StaffDAO implements GenericDAO<Staff, Integer> {
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) return rs.getInt(1);
             }
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error saving staff: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return -1;
     }
@@ -52,7 +56,8 @@ public class StaffDAO implements GenericDAO<Staff, Integer> {
     public boolean update(Staff s) {
         String sql = "UPDATE STAFF SET FIRST_NAME=?,LAST_NAME=?,DEPARTMENT=?,DESIGNATION=?," +
                      "SALARY=?,PHONE=?,EMAIL=?,ACTIVE=? WHERE STAFF_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, s.getFirstName()); ps.setString(2, s.getLastName());
             ps.setString(3, s.getDepartment().name()); ps.setString(4, s.getDesignation());
             ps.setDouble(5, s.getSalary()); ps.setString(6, s.getPhone());
@@ -61,37 +66,47 @@ public class StaffDAO implements GenericDAO<Staff, Integer> {
             int rows = ps.executeUpdate();
             DatabaseConnection.commit();
             return rows > 0;
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error updating staff: {}", e.getMessage());
             return false;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 
     @Override
     public boolean delete(Integer id) {
         String sql = "UPDATE STAFF SET ACTIVE=0 WHERE STAFF_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setInt(1, id);
             int rows = ps.executeUpdate();
             DatabaseConnection.commit();
             return rows > 0;
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error deactivating staff: {}", e.getMessage());
             return false;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 
     @Override
     public Optional<Staff> findById(Integer id) {
         String sql = "SELECT * FROM STAFF WHERE STAFF_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return Optional.of(mapRow(rs));
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return Optional.of(mapRow(rs));
+                }
             }
         } catch (SQLException e) { logger.error("Error: {}", e.getMessage()); }
+        finally { DatabaseConnection.closeConnection(); }
         return Optional.empty();
     }
 
@@ -99,10 +114,13 @@ public class StaffDAO implements GenericDAO<Staff, Integer> {
     public List<Staff> findAll() {
         List<Staff> list = new ArrayList<>();
         String sql = "SELECT * FROM STAFF ORDER BY FIRST_NAME, LAST_NAME";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) list.add(mapRow(rs));
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) { logger.error("Error fetching staff: {}", e.getMessage()); }
+        finally { DatabaseConnection.closeConnection(); }
         return list;
     }
 

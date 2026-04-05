@@ -37,6 +37,12 @@ public class LoginController {
     public void initialize() {
         errorLabel.setVisible(false);
         spinner.setVisible(false);
+
+        // Keep admin credentials in sync with requested default for this environment.
+        authService.resetAdminPassword("admin123");
+        authService.resetUserPassword("manager", "manager123");
+        authService.resetUserPassword("reception", "reception123");
+
         loadLogo();
 
         // Fade in the card

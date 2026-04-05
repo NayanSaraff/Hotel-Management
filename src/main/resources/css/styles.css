@@ -18,8 +18,8 @@
     -fx-border-radius: 6;
     -fx-background-radius: 6;
     -fx-padding: 6 10;
-    -fx-text-fill: #e2e8f0;
-    -fx-prompt-text-fill: #4a6080;
+    -fx-text-fill: #1f2937;
+    -fx-prompt-text-fill: #6b7280;
 }
 .text-field:focused, .text-area:focused {
     -fx-border-color: #4a8ec2;
@@ -359,18 +359,18 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 10, 0, 0, 3);
 }
 .data-table .column-header-background {
-    -fx-background-color: #0f1c2d;
+    -fx-background-color: linear-gradient(to bottom, #f8fafc, #e5e7eb);
     -fx-background-radius: 10 10 0 0;
 }
 .data-table .column-header,
 .data-table .filler {
     -fx-background-color: transparent;
-    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-color: rgba(31,41,55,0.12);
     -fx-border-width: 0 1 0 0;
 }
 .data-table .column-header .label {
     -fx-font-weight: bold;
-    -fx-text-fill: #a0b0c5;
+    -fx-text-fill: #111827;
     -fx-font-size: 12px;
     -fx-padding: 10 8;
 }
@@ -487,9 +487,9 @@
     -fx-background-color: #1e2d40;
     -fx-border-color: #2d3f55;
 }
-.combo-box-popup .list-cell         { -fx-text-fill: #c8d3e0; -fx-background-color: transparent; }
+.combo-box-popup .list-cell         { -fx-text-fill: #1f2937; -fx-background-color: #ffffff; }
 .combo-box-popup .list-cell:hover   { -fx-background-color: #243d55; }
-.combo-box-popup .list-cell:selected{ -fx-background-color: #1a4a7a; }
+.combo-box-popup .list-cell:selected{ -fx-background-color: #dbeafe; }
 
 .date-picker { -fx-background-color: #1a2d42; }
 .date-picker .text-field {
@@ -500,10 +500,20 @@
 .date-picker-popup > * { -fx-background-color: #1e2d40; }
 .date-picker-popup .month-year-pane { -fx-background-color: #0f1c2d; }
 .date-picker-popup .day-name-cell,
-.date-picker-popup .day-cell { -fx-text-fill: #c8d3e0; }
+.date-picker-popup .day-cell { -fx-text-fill: #1f2937; }
 .date-picker-popup .day-cell:hover { -fx-background-color: #243d55; }
-.date-picker-popup .selected { -fx-background-color: #1a4a7a; }
+.date-picker-popup .selected { -fx-background-color: #dbeafe; }
 .date-picker-popup .today { -fx-border-color: #4a8ec2; }
+
+/* Generic placeholder / prompt text visibility */
+.placeholder .label,
+.table-view .placeholder .label,
+.table-view .placeholder,
+.text-input .prompt-text,
+.text-field .prompt-text,
+.text-area .prompt-text {
+    -fx-text-fill: #374151;
+}
 
 /* ══════════════════════════════════════════════════════════════════════════
    ALERT / DIALOG

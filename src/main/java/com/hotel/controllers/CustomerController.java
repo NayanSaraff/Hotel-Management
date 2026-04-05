@@ -122,6 +122,61 @@ customerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
     @FXML private void handleCancel() { showForm(false); }
 
+    @FXML private void handleDelete() {
+        Customer c = customerTable.getSelectionModel().getSelectedItem();
+        if (c == null) { AlertUtil.showWarning("Select Customer", "Please select a customer to delete."); return; }
+
+        javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Customer");
+        confirm.setHeaderText("Delete " + c.getFullName() + "?");
+        confirm.setContentText(
+            "This will permanently delete the customer's profile and their portal account (if any).\n" +
+            "Booking history will also be removed.\n\nThis action cannot be undone.");
+        confirm.showAndWait().ifPresent(result -> {
+            if (result == javafx.scene.control.ButtonType.OK) {
+                boolean deleted = deleteCustomerCascade(c.getCustomerId());
+                if (deleted) {
+                    AlertUtil.showInfo("Deleted", "Customer \"" + c.getFullName() + "\" has been deleted.");
+                } else {
+                    AlertUtil.showError("Delete Failed", "Customer could not be deleted.");
+                }
+                loadCustomers();
+                showForm(false);
+            }
+        });
+    }
+
+    private boolean deleteCustomerCascade(int customerId) {
+        String[] statements = new String[] {
+                "DELETE FROM FOOD_ORDER_ITEMS WHERE ORDER_ID IN (SELECT ORDER_ID FROM FOOD_ORDERS WHERE CUSTOMER_ID = ?)",
+                "DELETE FROM FOOD_ORDERS WHERE CUSTOMER_ID = ?",
+                "DELETE FROM SERVICE_REQUESTS WHERE CUSTOMER_ID = ?",
+                "DELETE FROM PHONE_CALLS WHERE CUSTOMER_ID = ?",
+                "DELETE FROM PAYMENTS WHERE BOOKING_ID IN (SELECT BOOKING_ID FROM BOOKINGS WHERE CUSTOMER_ID = ?)",
+                "DELETE FROM BOOKINGS WHERE CUSTOMER_ID = ?",
+                "DELETE FROM CUSTOMER_ACCOUNTS WHERE CUSTOMER_ID = ?",
+                "DELETE FROM COUPONS WHERE CUSTOMER_ID = ?",
+                "DELETE FROM CUSTOMERS WHERE CUSTOMER_ID = ?"
+        };
+
+        try {
+            for (String sql : statements) {
+                try (java.sql.PreparedStatement ps = com.hotel.util.DatabaseConnection.getConnection().prepareStatement(sql)) {
+                    ps.setInt(1, customerId);
+                    ps.executeUpdate();
+                }
+            }
+            com.hotel.util.DatabaseConnection.commit();
+            return true;
+        } catch (java.sql.SQLException e) {
+            com.hotel.util.DatabaseConnection.rollback();
+            AlertUtil.showError("Delete Failed", "Could not delete customer: " + e.getMessage());
+            return false;
+        } finally {
+            com.hotel.util.DatabaseConnection.closeConnection();
+        }
+    }
+
     private Customer buildCustomerFromForm() {
         Customer c = new Customer();
         c.setFirstName(firstNameField.getText().trim());

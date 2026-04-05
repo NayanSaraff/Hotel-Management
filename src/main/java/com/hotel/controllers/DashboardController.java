@@ -33,6 +33,7 @@ public class DashboardController {
     @FXML private Label todayRevenueLabel;
     @FXML private Label todayDateLabel;
     @FXML private Label alertBadge;
+    @FXML private Label portalRequestsBadge;
 
     @FXML private StackPane contentArea;
     @FXML private Label     userNameLabel;
@@ -96,6 +97,22 @@ public class DashboardController {
                 }
             }
         } catch (Exception ignored) {}
+
+        // Portal requests badge
+        try {
+            com.hotel.portal.dao.ServiceRequestDAO svcDAO = new com.hotel.portal.dao.ServiceRequestDAO();
+            com.hotel.portal.dao.FoodOrderDAO foodDAO = new com.hotel.portal.dao.FoodOrderDAO();
+            com.hotel.dao.BookingDAO bookingDAO = new com.hotel.dao.BookingDAO();
+            int total = svcDAO.countUnseen() + foodDAO.countUnseenOrders() + bookingDAO.countNewPortalBookings();
+            if (portalRequestsBadge != null) {
+                if (total > 0) {
+                    portalRequestsBadge.setText(String.valueOf(total));
+                    portalRequestsBadge.setVisible(true);
+                } else {
+                    portalRequestsBadge.setVisible(false);
+                }
+            }
+        } catch (Exception ignored) {}
     }
 
     @FXML private void goToDashboard()  { loadDashboardStats(); clearContent(); }
@@ -107,6 +124,9 @@ public class DashboardController {
     @FXML private void goToInventory()  { loadContent("inventory.fxml", new InventoryController()); }
     @FXML private void goToReports()    { loadContent("reports.fxml",   new ReportsController()); }
     @FXML private void goToExpenses()   { loadContent("expenses.fxml",  new ExpenseController()); }
+    @FXML private void goToPortalRequests() {
+        loadContent("portal_requests.fxml", new com.hotel.controllers.PortalRequestsController());
+    }
 
     @FXML
     private void handleLogout() {

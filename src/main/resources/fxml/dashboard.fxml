@@ -37,6 +37,16 @@
                        StackPane.alignment="CENTER_RIGHT" visible="false"/>
             </StackPane>
 
+            <!-- Portal Requests nav with badge -->
+            <StackPane maxWidth="Infinity">
+                <Button text="🌐  Portal Requests"
+                        style="-fx-background-color:rgba(255,165,0,0.15);-fx-text-fill:#f39c12;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;-fx-font-weight:bold;"
+                        maxWidth="Infinity" onAction="#goToPortalRequests"/>
+                <Label fx:id="portalRequestsBadge" text="0"
+                       style="-fx-background-color:#e74c3c;-fx-text-fill:white;-fx-font-size:10px;-fx-font-weight:bold;-fx-background-radius:10;-fx-padding:2 6;"
+                       StackPane.alignment="CENTER_RIGHT" visible="false"/>
+            </StackPane>
+
             <Region VBox.vgrow="ALWAYS"/>
             <Separator style="-fx-opacity:0.3;"/>
             <Button text="🚪  Logout" style="-fx-background-color:transparent;-fx-text-fill:#e74c3c;-fx-font-size:13px;-fx-padding:9 12;-fx-background-radius:8;-fx-alignment:CENTER_LEFT;-fx-cursor:hand;" maxWidth="Infinity" onAction="#handleLogout"/>
@@ -49,6 +59,9 @@
                 <Label text="Hotel Management System" style="-fx-font-size:16px;-fx-font-weight:bold;-fx-text-fill:#1a3c5c;"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="todayDateLabel" text="" style="-fx-font-size:12px;-fx-text-fill:#566573;"/>
+                <Button text="🔄 Refresh Stats"
+                        style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:7 14;-fx-background-radius:8;-fx-cursor:hand;"
+                        onAction="#refresh"/>
             </HBox>
             <HBox style="-fx-background-color:#f4f7fb;" spacing="8">
                 <padding><Insets top="12" right="12" bottom="12" left="12"/></padding>

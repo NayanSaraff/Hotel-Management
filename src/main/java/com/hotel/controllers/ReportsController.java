@@ -7,7 +7,6 @@ import com.hotel.service.ReportService;
 
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
@@ -25,7 +24,7 @@ public class ReportsController {
 
     @FXML private BarChart<String, Number>      revenueBarChart;
     @FXML private PieChart                      categoryPieChart;
-    @FXML private LineChart<String, Number>     bookingTrendChart;
+    @FXML private BarChart<String, Number>      bookingTrendChart;
     @FXML private BarChart<String, Number>      topRoomsChart;
 
     @FXML private VBox alertsBox;

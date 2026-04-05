@@ -22,29 +22,33 @@ public class CustomerDAO implements GenericDAO<Customer, Integer> {
         String sql = "INSERT INTO CUSTOMERS (FIRST_NAME,LAST_NAME,EMAIL,PHONE,ADDRESS,CITY,STATE," +
                      "COUNTRY,PIN_CODE,ID_TYPE,ID_NUMBER,DATE_OF_BIRTH,NATIONALITY,REGISTERED_DATE) " +
                      "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,SYSDATE)";
-        try (PreparedStatement ps = DatabaseConnection.getConnection()
-                .prepareStatement(sql, new String[]{"CUSTOMER_ID"})) {
-            ps.setString(1, c.getFirstName());
-            ps.setString(2, c.getLastName());
-            ps.setString(3, c.getEmail());
-            ps.setString(4, c.getPhone());
-            ps.setString(5, c.getAddress());
-            ps.setString(6, c.getCity());
-            ps.setString(7, c.getState());
-            ps.setString(8, c.getCountry());
-            ps.setString(9, c.getPinCode());
-            ps.setString(10, c.getIdType() != null ? c.getIdType().name() : null);
-            ps.setString(11, c.getIdNumber());
-            ps.setDate(12, c.getDateOfBirth() != null ? Date.valueOf(c.getDateOfBirth()) : null);
-            ps.setString(13, c.getNationality());
-            ps.executeUpdate();
-            DatabaseConnection.commit();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getInt(1);
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection()
+                    .prepareStatement(sql, new String[]{"CUSTOMER_ID"})) {
+                ps.setString(1, c.getFirstName());
+                ps.setString(2, c.getLastName());
+                ps.setString(3, c.getEmail());
+                ps.setString(4, c.getPhone());
+                ps.setString(5, c.getAddress());
+                ps.setString(6, c.getCity());
+                ps.setString(7, c.getState());
+                ps.setString(8, c.getCountry());
+                ps.setString(9, c.getPinCode());
+                ps.setString(10, c.getIdType() != null ? c.getIdType().name() : null);
+                ps.setString(11, c.getIdNumber());
+                ps.setDate(12, c.getDateOfBirth() != null ? Date.valueOf(c.getDateOfBirth()) : null);
+                ps.setString(13, c.getNationality());
+                ps.executeUpdate();
+                DatabaseConnection.commit();
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) return rs.getInt(1);
+                }
             }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error saving customer: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return -1;
     }
@@ -53,25 +57,29 @@ public class CustomerDAO implements GenericDAO<Customer, Integer> {
     public boolean update(Customer c) {
         String sql = "UPDATE CUSTOMERS SET FIRST_NAME=?,LAST_NAME=?,EMAIL=?,PHONE=?,ADDRESS=?," +
                      "CITY=?,STATE=?,COUNTRY=?,PIN_CODE=?,NATIONALITY=? WHERE CUSTOMER_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, c.getFirstName());
-            ps.setString(2, c.getLastName());
-            ps.setString(3, c.getEmail());
-            ps.setString(4, c.getPhone());
-            ps.setString(5, c.getAddress());
-            ps.setString(6, c.getCity());
-            ps.setString(7, c.getState());
-            ps.setString(8, c.getCountry());
-            ps.setString(9, c.getPinCode());
-            ps.setString(10, c.getNationality());
-            ps.setInt(11, c.getCustomerId());
-            int rows = ps.executeUpdate();
-            DatabaseConnection.commit();
-            return rows > 0;
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+                ps.setString(1, c.getFirstName());
+                ps.setString(2, c.getLastName());
+                ps.setString(3, c.getEmail());
+                ps.setString(4, c.getPhone());
+                ps.setString(5, c.getAddress());
+                ps.setString(6, c.getCity());
+                ps.setString(7, c.getState());
+                ps.setString(8, c.getCountry());
+                ps.setString(9, c.getPinCode());
+                ps.setString(10, c.getNationality());
+                ps.setInt(11, c.getCustomerId());
+                int rows = ps.executeUpdate();
+                DatabaseConnection.commit();
+                return rows > 0;
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error updating customer: {}", e.getMessage());
             return false;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 
@@ -85,13 +93,17 @@ public class CustomerDAO implements GenericDAO<Customer, Integer> {
     @Override
     public Optional<Customer> findById(Integer id) {
         String sql = "SELECT * FROM CUSTOMERS WHERE CUSTOMER_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return Optional.of(mapRow(rs));
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return Optional.of(mapRow(rs));
+                }
             }
         } catch (SQLException e) {
             logger.error("Error finding customer: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return Optional.empty();
     }
@@ -100,11 +112,15 @@ public class CustomerDAO implements GenericDAO<Customer, Integer> {
     public List<Customer> findAll() {
         List<Customer> list = new ArrayList<>();
         String sql = "SELECT * FROM CUSTOMERS ORDER BY LAST_NAME, FIRST_NAME";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) list.add(mapRow(rs));
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) {
             logger.error("Error fetching customers: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return list;
     }
@@ -117,15 +133,39 @@ public class CustomerDAO implements GenericDAO<Customer, Integer> {
         String kw = "%" + keyword.toUpperCase() + "%";
         String sql = "SELECT * FROM CUSTOMERS WHERE UPPER(FIRST_NAME||' '||LAST_NAME) LIKE ? " +
                      "OR UPPER(PHONE) LIKE ? OR UPPER(EMAIL) LIKE ? ORDER BY LAST_NAME";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setString(1, kw); ps.setString(2, kw); ps.setString(3, kw);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) list.add(mapRow(rs));
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+                ps.setString(1, kw); ps.setString(2, kw); ps.setString(3, kw);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) list.add(mapRow(rs));
+                }
             }
         } catch (SQLException e) {
             logger.error("Error searching customers: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return list;
+    }
+
+    /**
+     * Find a customer by email (case-insensitive).
+     */
+    public Optional<Customer> findByEmail(String email) {
+        String sql = "SELECT * FROM CUSTOMERS WHERE LOWER(EMAIL) = ? ORDER BY CUSTOMER_ID DESC";
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+                ps.setString(1, email == null ? null : email.toLowerCase().trim());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return Optional.of(mapRow(rs));
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Error finding customer by email: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
+        }
+        return Optional.empty();
     }
 
     private Customer mapRow(ResultSet rs) throws SQLException {

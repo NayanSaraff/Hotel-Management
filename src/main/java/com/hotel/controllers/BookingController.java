@@ -98,8 +98,11 @@ public class BookingController {
     private final InvoiceService invoiceService = new InvoiceService();
     private final EmailService emailService = new EmailService();
     private final CouponService couponService = new CouponService();
-    private final HousekeepingService housekeepingService = new HousekeepingService();
     private final PaymentGatewayService paymentGatewayService = new PaymentGatewayService();
+    private final com.hotel.dao.BookingDAO bookingDAO = new com.hotel.dao.BookingDAO();
+
+    // Portal sync badge label – injected via FXML if present, else created dynamically
+    @FXML private Label portalNewBadge;
 
     @FXML
     public void initialize() {
@@ -184,6 +187,51 @@ public class BookingController {
                         || (b.getRoomNumber() != null && b.getRoomNumber().toLowerCase().contains(keyword)))
                 .toList();
         bookingTable.setItems(FXCollections.observableArrayList(list));
+
+        // Keep booking rows visually consistent with the rest of booking management.
+        bookingTable.setRowFactory(tv -> new javafx.scene.control.TableRow<Booking>() {
+            @Override
+            protected void updateItem(Booking item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setStyle("");
+                } else {
+                    // Use BOOKING_SOURCE field directly (reliable, not fragile prefix checking)
+                    boolean isPortal = item.getBookingSource() != null &&
+                                       item.getBookingSource() == Booking.Source.PORTAL;
+                    if (isPortal) {
+                        setStyle("-fx-background-color: white;");
+                        setTooltip(new Tooltip("🌐 Online Portal Booking"));
+                    } else {
+                        setStyle("-fx-background-color: white;");
+                        setTooltip(null);
+                    }
+                }
+            }
+        });
+        updatePortalBadge();
+    }
+
+    /** Sync / refresh button – marks portal bookings as seen and reloads. */
+    @FXML
+    public void syncPortalBookings() {
+        bookingDAO.markPortalBookingsSeen();
+        loadBookings();
+        int newCount = bookingDAO.countNewPortalBookings();
+        if (portalNewBadge != null) {
+            portalNewBadge.setVisible(newCount > 0);
+            portalNewBadge.setText(newCount + " NEW");
+        }
+        AlertUtil.showInfo("Sync Complete",
+            "Portal bookings synced. All new online bookings are now marked as reviewed.");
+    }
+
+    private void updatePortalBadge() {
+        if (portalNewBadge != null) {
+            int count = bookingDAO.countNewPortalBookings();
+            portalNewBadge.setVisible(count > 0);
+            portalNewBadge.setText(count + " NEW");
+        }
     }
 
     @FXML
@@ -280,12 +328,15 @@ public class BookingController {
         } else if (result == -1) {
             couponStatusLabel.setText("❌ Coupon already used.");
             couponStatusLabel.setStyle("-fx-text-fill:#e74c3c;");
+            if (discountedTotalLabel != null) discountedTotalLabel.setText("Discounted Total: —");
         } else if (result == -2) {
             couponStatusLabel.setText("❌ Coupon expired.");
             couponStatusLabel.setStyle("-fx-text-fill:#e74c3c;");
+            if (discountedTotalLabel != null) discountedTotalLabel.setText("Discounted Total: —");
         } else {
             couponStatusLabel.setText("❌ Invalid coupon code.");
             couponStatusLabel.setStyle("-fx-text-fill:#e74c3c;");
+            if (discountedTotalLabel != null) discountedTotalLabel.setText("Discounted Total: —");
         }
     }
 
@@ -385,12 +436,25 @@ public class BookingController {
             Optional<Customer> customerOpt = customerDAO.findById(booking.getCustomerId());
             customerOpt.ifPresent(customer -> {
                 booking.setBookingId(id);
-                new Thread(() -> emailService.sendBookingConfirmation(customer, booking)).start();
+                // Send email in background; report success/failure back to UI
+                new Thread(() -> {
+                    try {
+                        emailService.sendBookingConfirmation(customer, booking);
+                        javafx.application.Platform.runLater(() ->
+                            AlertUtil.showInfo("Email Sent ✉️", 
+                                "Confirmation email sent to: " + customer.getEmail()));
+                    } catch (Exception emailEx) {
+                        javafx.application.Platform.runLater(() ->
+                            AlertUtil.showWarning("Email Failed ⚠️", 
+                                "Could not send confirmation email: " + emailEx.getMessage() + 
+                                "\nBooking was saved successfully."));
+                    }
+                }).start();
             });
 
             AlertUtil.showInfo("Booking Confirmed! ✅",
                     "Reference: " + booking.getBookingReference() +
-                            "\n\nA confirmation email has been sent to the guest.");
+                            "\n\nConfirmation email is being sent to the guest...");
             bookingForm.setVisible(false);
             bookingForm.setManaged(false);
             applyFilter();
@@ -452,12 +516,15 @@ public class BookingController {
                 "-fx-font-weight:bold;-fx-padding:6 14;-fx-background-radius:6;");
         Label couponResult = new Label();
         final double[] finalAmount = { booking.getBalanceDue() };
+        final String[] appliedCoupon = { null };  // Track validated coupon; only marked used after checkout
 
         applyCouponBtn.setOnAction(e -> {
             String code = couponInput.getText().trim();
             int disc = couponService.validateCoupon(code);
             if (disc > 0) {
-                finalAmount[0] = couponService.applyCoupon(code, booking.getBalanceDue());
+                // Calculate discount preview WITHOUT marking as used yet
+                finalAmount[0] = booking.getBalanceDue() * (100.0 - disc) / 100.0;
+                appliedCoupon[0] = code;  // Store coupon code; mark used only on confirmBtn
                 couponResult.setText("✅ " + disc + "% off! New amount: ₹" +
                         String.format("%.2f", finalAmount[0]));
                 couponResult.setStyle("-fx-text-fill:#27ae60;-fx-font-weight:bold;");
@@ -466,6 +533,7 @@ public class BookingController {
                 couponResult.setText(disc == -1 ? "❌ Already used"
                         : disc == -2 ? "❌ Expired" : "❌ Invalid");
                 couponResult.setStyle("-fx-text-fill:#e74c3c;");
+                appliedCoupon[0] = null;
             }
         });
 
@@ -526,26 +594,41 @@ public class BookingController {
                 Payment.Mode mode = Payment.Mode.valueOf(modeStr);
                 bookingService.checkOut(booking.getBookingId(), finalAmount[0], mode);
 
-                housekeepingService.startCleaning(
+                // ONLY mark coupon as used after successful checkout
+                if (appliedCoupon[0] != null) {
+                    couponService.applyCoupon(appliedCoupon[0], booking.getBalanceDue());
+                }
+
+                HousekeepingService.getInstance().startCleaning(
                         booking.getRoomId(), booking.getRoomNumber(), null);
 
                 String newCoupon = couponService.generateCheckoutCoupon(
                         booking.getCustomerId(), booking.getBookingReference());
 
-                // Send invoice (with coupon) + feedback email automatically
+                // Send invoice (with coupon) + feedback email automatically with error feedback
                 final String finalCoupon = newCoupon;
                 customerDAO.findById(booking.getCustomerId()).ifPresent(customer -> {
                     new Thread(() -> {
-                        // Generate invoice PDF with coupon voucher included
-                        String invoiceDir = "C:/Users/sarad/OneDrive/Desktop/HotelManagementSystem/invoices/";
-                        new java.io.File(invoiceDir).mkdirs(); // creates the folder if it doesn't exist
-                        String tempPath = invoiceDir + "Invoice_" + booking.getBookingReference() + ".pdf";
-                        invoiceService.generateInvoiceWithCoupon(
-                                booking.getBookingId(), tempPath, finalCoupon);
-                        // Email invoice + coupon to guest
-                        emailService.sendInvoiceEmail(customer, booking, tempPath);
-                        // Email feedback form
-                        emailService.sendFeedbackRequest(customer, booking);
+                        try {
+                            // Generate invoice PDF with coupon voucher included
+                            String invoiceDir = "C:/Users/sarad/OneDrive/Desktop/HotelManagementSystem/invoices/";
+                            new java.io.File(invoiceDir).mkdirs(); // creates the folder if it doesn't exist
+                            String tempPath = invoiceDir + "Invoice_" + booking.getBookingReference() + ".pdf";
+                            invoiceService.generateInvoiceWithCoupon(
+                                    booking.getBookingId(), tempPath, finalCoupon);
+                            // Email invoice + coupon to guest
+                            emailService.sendInvoiceEmail(customer, booking, tempPath);
+                            // Email feedback form
+                            emailService.sendFeedbackRequest(customer, booking);
+                            javafx.application.Platform.runLater(() ->
+                                AlertUtil.showInfo("Emails Sent ✉️", 
+                                    "Invoice and feedback form sent to: " + customer.getEmail()));
+                        } catch (Exception emailEx) {
+                            javafx.application.Platform.runLater(() ->
+                                AlertUtil.showWarning("Email Failed ⚠️", 
+                                    "Could not send checkout emails: " + emailEx.getMessage() + 
+                                    "\nCheckout was successful; invoices are saved locally."));
+                        }
                     }).start();
                 });
 

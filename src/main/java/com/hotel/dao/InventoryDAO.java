@@ -22,7 +22,8 @@ public class InventoryDAO implements GenericDAO<InventoryItem, Integer> {
         String sql = "INSERT INTO INVENTORY (ITEM_NAME,CATEGORY,QUANTITY_AVAILABLE," +
                      "MINIMUM_THRESHOLD,UNIT,UNIT_PRICE,SUPPLIER,LAST_RESTOCKED) " +
                      "VALUES (?,?,?,?,?,?,?,?)";
-        try (PreparedStatement ps = DatabaseConnection.getConnection()
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection()
                 .prepareStatement(sql, new String[]{"ITEM_ID"})) {
             ps.setString(1, item.getItemName());
             ps.setString(2, item.getCategory().name());
@@ -38,9 +39,12 @@ public class InventoryDAO implements GenericDAO<InventoryItem, Integer> {
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) return rs.getInt(1);
             }
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error saving inventory item: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return -1;
     }
@@ -50,7 +54,8 @@ public class InventoryDAO implements GenericDAO<InventoryItem, Integer> {
         String sql = "UPDATE INVENTORY SET ITEM_NAME=?,CATEGORY=?,QUANTITY_AVAILABLE=?," +
                      "MINIMUM_THRESHOLD=?,UNIT=?,UNIT_PRICE=?,SUPPLIER=?,LAST_RESTOCKED=? " +
                      "WHERE ITEM_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, item.getItemName());
             ps.setString(2, item.getCategory().name());
             ps.setInt(3, item.getQuantityAvailable());
@@ -64,38 +69,49 @@ public class InventoryDAO implements GenericDAO<InventoryItem, Integer> {
             int rows = ps.executeUpdate();
             DatabaseConnection.commit();
             return rows > 0;
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error updating inventory item: {}", e.getMessage());
             return false;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 
     @Override
     public boolean delete(Integer id) {
         String sql = "DELETE FROM INVENTORY WHERE ITEM_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setInt(1, id);
             int rows = ps.executeUpdate();
             DatabaseConnection.commit();
             return rows > 0;
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error deleting inventory item: {}", e.getMessage());
             return false;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 
     @Override
     public Optional<InventoryItem> findById(Integer id) {
         String sql = "SELECT * FROM INVENTORY WHERE ITEM_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
-            ps.setInt(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return Optional.of(mapRow(rs));
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) return Optional.of(mapRow(rs));
+                }
             }
         } catch (SQLException e) {
             logger.error("Error finding inventory item: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return Optional.empty();
     }
@@ -104,11 +120,15 @@ public class InventoryDAO implements GenericDAO<InventoryItem, Integer> {
     public List<InventoryItem> findAll() {
         List<InventoryItem> list = new ArrayList<>();
         String sql = "SELECT * FROM INVENTORY ORDER BY CATEGORY, ITEM_NAME";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) list.add(mapRow(rs));
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) {
             logger.error("Error fetching inventory: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return list;
     }
@@ -118,11 +138,15 @@ public class InventoryDAO implements GenericDAO<InventoryItem, Integer> {
         List<InventoryItem> list = new ArrayList<>();
         String sql = "SELECT * FROM INVENTORY WHERE QUANTITY_AVAILABLE <= MINIMUM_THRESHOLD " +
                      "ORDER BY QUANTITY_AVAILABLE";
-        try (Statement st = DatabaseConnection.getConnection().createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) list.add(mapRow(rs));
+        try {
+            try (Statement st = DatabaseConnection.getConnection().createStatement();
+                 ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) list.add(mapRow(rs));
+            }
         } catch (SQLException e) {
             logger.error("Error fetching low-stock items: {}", e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection();
         }
         return list;
     }
@@ -132,17 +156,21 @@ public class InventoryDAO implements GenericDAO<InventoryItem, Integer> {
         String sql = "UPDATE INVENTORY SET QUANTITY_AVAILABLE = QUANTITY_AVAILABLE + ?, " +
                      "LAST_RESTOCKED = CASE WHEN ? > 0 THEN SYSDATE ELSE LAST_RESTOCKED END " +
                      "WHERE ITEM_ID=?";
-        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
+        try {
+            try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(sql)) {
             ps.setInt(1, delta);
             ps.setInt(2, delta);
             ps.setInt(3, itemId);
             int rows = ps.executeUpdate();
             DatabaseConnection.commit();
             return rows > 0;
+            }
         } catch (SQLException e) {
             DatabaseConnection.rollback();
             logger.error("Error adjusting inventory quantity: {}", e.getMessage());
             return false;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
     }
 

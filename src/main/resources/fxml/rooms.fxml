@@ -13,10 +13,10 @@
         <Region HBox.hgrow="ALWAYS"/>
         <TextField fx:id="searchField" promptText="Search rooms…" prefWidth="220"
                    style="-fx-background-color:white;-fx-border-color:#dde3eb;-fx-border-radius:20;-fx-background-radius:20;-fx-padding:7 14;"/>
-        <Button text="➕ Add Room"
+        <Button fx:id="addButton" text="➕ Add Room"
                 style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 16;-fx-background-radius:8;-fx-cursor:hand;"
                 onAction="#handleAdd"/>
-        <Button text="✏️ Edit"
+        <Button text="✎ Edit"
                 style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:8 16;-fx-background-radius:8;-fx-border-color:#bdc3c7;-fx-cursor:hand;"
                 onAction="#handleEdit"/>
         <Button fx:id="deleteButton" text="🗑 Delete"
@@ -35,6 +35,9 @@
             <TableColumn fx:id="colPrice"      text="₹/Night"  prefWidth="110" minWidth="100"/>
             <TableColumn fx:id="colStatus"     text="Status"   prefWidth="130" minWidth="120"/>
         </columns>
+        <placeholder>
+            <Label text="No data available." style="-fx-text-fill:#aaa;-fx-font-size:13px;"/>
+        </placeholder>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
@@ -71,10 +74,10 @@
                       style="-fx-background-color:#f8fafc;-fx-border-color:#dde3eb;-fx-border-radius:6;-fx-background-radius:6;-fx-padding:7 10;"/>
         </GridPane>
         <HBox spacing="8" alignment="CENTER_RIGHT">
-            <Button text="💾 Save"
+                    <Button fx:id="saveButton" text="💾 Save"
                     style="-fx-background-color:#2980b9;-fx-text-fill:white;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:8;-fx-cursor:hand;"
                     onAction="#handleSave"/>
-            <Button text="✖ Cancel"
+                <Button fx:id="cancelButton" text="✖ Cancel"
                     style="-fx-background-color:#ecf0f1;-fx-text-fill:#2c3e50;-fx-font-weight:bold;-fx-padding:8 18;-fx-background-radius:8;-fx-cursor:hand;"
                     onAction="#handleCancel"/>
         </HBox>

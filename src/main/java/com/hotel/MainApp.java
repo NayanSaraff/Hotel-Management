@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.hotel.controllers.LoginController;
 import com.hotel.controllers.DashboardController;
+import com.hotel.service.HousekeepingService;
 import com.hotel.util.DatabaseConnection;
 import com.hotel.util.SessionManager;
 
@@ -71,8 +72,20 @@ public class MainApp extends Application {
 
     @Override
     public void stop() {
-        DatabaseConnection.closeConnection();
-        SessionManager.getInstance().clearSession();
+        try {
+            // Shutdown housekeeping service scheduler (prevents thread leak)
+            HousekeepingService.getInstance().shutdown();
+            
+            // Shutdown database connection pool
+            DatabaseConnection.shutdownPool();
+            
+            // Clear session
+            SessionManager.getInstance().clearSession();
+            
+            System.out.println("Application shut down gracefully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

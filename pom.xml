@@ -13,8 +13,7 @@
         <javafx.version>21.0.1</javafx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>com.hotel.MainApp</main.class>
-    </properties>
-    <dependencies>
+    </properties>    <dependencies>
         <dependency><groupId>org.openjfx</groupId><artifactId>javafx-controls</artifactId><version>${javafx.version}</version></dependency>
         <dependency><groupId>org.openjfx</groupId><artifactId>javafx-fxml</artifactId><version>${javafx.version}</version></dependency>
         <dependency><groupId>org.openjfx</groupId><artifactId>javafx-graphics</artifactId><version>${javafx.version}</version></dependency>
@@ -24,6 +23,8 @@
         <dependency><groupId>org.openjfx</groupId><artifactId>javafx-web</artifactId><version>${javafx.version}</version></dependency>
         <!-- Oracle JDBC -->
         <dependency><groupId>com.oracle.database.jdbc</groupId><artifactId>ojdbc8</artifactId><version>21.9.0.0</version></dependency>
+        <!-- HikariCP Connection Pool -->
+        <dependency><groupId>com.zaxxer</groupId><artifactId>HikariCP</artifactId><version>5.1.0</version></dependency>
         <!-- BCrypt -->
         <dependency><groupId>org.mindrot</groupId><artifactId>jbcrypt</artifactId><version>0.4</version></dependency>
         <!-- iText PDF -->
@@ -72,4 +73,18 @@
             </plugin>
         </plugins>
     </build>
+    <!-- ══════════════════════════════════════════════════════════
+         PROFILES
+         Hotel Management:  mvn javafx:run
+         Customer Portal:   mvn javafx:run -Pportal
+    ══════════════════════════════════════════════════════════ -->
+    <profiles>
+        <profile>
+            <id>portal</id>
+            <properties>
+                <main.class>com.hotel.portal.CustomerPortalApp</main.class>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>

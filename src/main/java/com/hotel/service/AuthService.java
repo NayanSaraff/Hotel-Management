@@ -1,13 +1,15 @@
 package com.hotel.service;
 
-import com.hotel.dao.UserDAO;
-import com.hotel.model.User;
-import com.hotel.util.SessionManager;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Optional;
+import com.hotel.dao.UserDAO;
+import com.hotel.model.User;
+import com.hotel.util.DatabaseConnection;
+import com.hotel.util.SessionManager;
 
 /**
  * Service layer for User authentication and management.
@@ -22,17 +24,21 @@ public class AuthService {
      * On success, stores user in SessionManager.
      */
     public boolean login(String username, String password) {
-        if (username == null || username.isBlank() || password == null || password.isBlank()) {
+        try {
+            if (username == null || username.isBlank() || password == null || password.isBlank()) {
+                return false;
+            }
+            Optional<User> userOpt = userDAO.authenticate(username.trim(), password);
+            if (userOpt.isPresent()) {
+                SessionManager.getInstance().setCurrentUser(userOpt.get());
+                logger.info("User '{}' logged in successfully.", username);
+                return true;
+            }
+            logger.warn("Failed login attempt for username: {}", username);
             return false;
+        } finally {
+            DatabaseConnection.closeConnection();
         }
-        Optional<User> userOpt = userDAO.authenticate(username.trim(), password);
-        if (userOpt.isPresent()) {
-            SessionManager.getInstance().setCurrentUser(userOpt.get());
-            logger.info("User '{}' logged in successfully.", username);
-            return true;
-        }
-        logger.warn("Failed login attempt for username: {}", username);
-        return false;
     }
 
     public void logout() {
@@ -56,6 +62,23 @@ public class AuthService {
 
     public boolean deactivateUser(int userId) {
         return userDAO.delete(userId);
+    }
+
+    /**
+     * Force-update admin password to a known value.
+     */
+    public boolean resetAdminPassword(String newPassword) {
+        if (newPassword == null || newPassword.isBlank()) {
+            return false;
+        }
+        return userDAO.forceResetAdminPassword(newPassword);
+    }
+
+    public boolean resetUserPassword(String username, String newPassword) {
+        if (username == null || username.isBlank() || newPassword == null || newPassword.isBlank()) {
+            return false;
+        }
+        return userDAO.forceResetPassword(username.trim(), newPassword);
     }
 
     private void validateUser(User u) {
