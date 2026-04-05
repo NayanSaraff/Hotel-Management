@@ -22,7 +22,9 @@ Unified project for hotel staff operations and guest self-service, built on Java
 - [Configuration](#configuration)
 - [Run Commands](#run-commands)
 - [Default Credentials](#default-credentials)
+- [Basic Services](#basic-services)
 - [Portal User Journey](#portal-user-journey)
+- [Generalized Workflow](#generalized-workflow)
 - [Staff and Portal Synchronization](#staff-and-portal-synchronization)
 - [Staff Modules](#staff-modules)
 - [Portal Modules](#portal-modules)
@@ -175,6 +177,28 @@ mvn javafx:run -Pportal
 
 ---
 
+## Basic Services
+
+The platform supports these core guest services out of the box:
+
+- Housekeeping
+- Extra Towels
+- Extra Pillow
+- Wake-up Call
+- Laundry
+- Taxi Assistance
+- Maintenance
+- Phone Call / Reception Callback
+- General Request Notes
+
+Food and dining services are handled through the dedicated Food module:
+
+- menu browsing
+- cart and order placement
+- live order status tracking
+
+---
+
 ## Portal User Journey
 
 1. Register account
@@ -183,6 +207,19 @@ mvn javafx:run -Pportal
 4. Raise service requests
 5. Place food order and track status
 6. Update profile/password
+
+---
+
+## Generalized Workflow
+
+1. User signs in (staff or guest)
+2. User initiates action (booking, service, food, payment, profile update)
+3. Controller validates input
+4. Service layer applies business rules
+5. DAO executes database transaction
+6. Shared Oracle data is updated
+7. Other app reflects changes via refresh/sync
+8. User receives updated status in UI
 
 ---
 
@@ -363,14 +400,12 @@ mvn clean package
 
 ```mermaid
 flowchart LR
-        G[Guest Uses Portal] --> P[Portal App]
-        P --> DB[(Oracle Database)]
-        S[Staff Uses Hotel App] --> H[Hotel Staff App]
-        H --> DB
-        DB --> H
-        DB --> P
-        H --> R[Staff Updates Status]
-        R --> DB
-        DB --> V[Guest Sees Updated Booking/Order]
+        U[User Action] --> APP[Hotel App or Portal App]
+        APP --> C[Controller Layer]
+        C --> SV[Service Layer]
+        SV --> DAO[DAO Layer]
+        DAO --> DB[(Oracle Database)]
+        DB --> SYNC[Shared State / Sync Refresh]
+        SYNC --> OUT[Updated UI for Staff and Guest]
 ```
 
