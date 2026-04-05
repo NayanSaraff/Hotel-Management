@@ -357,3 +357,20 @@ mvn clean package
 - confirm both apps point to the same schema
 - use refresh/sync controls in the relevant modules
 
+---
+
+## System Flowchart
+
+```mermaid
+flowchart LR
+        G[Guest Uses Portal] --> P[Portal App]
+        P --> DB[(Oracle Database)]
+        S[Staff Uses Hotel App] --> H[Hotel Staff App]
+        H --> DB
+        DB --> H
+        DB --> P
+        H --> R[Staff Updates Status]
+        R --> DB
+        DB --> V[Guest Sees Updated Booking/Order]
+```
+
